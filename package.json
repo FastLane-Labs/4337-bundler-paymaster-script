@@ -1,0 +1,14 @@
+{
+  "devDependencies": {
+    "dotenv": "^16.4.7",
+    "permissionless": "^0.2.21",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "viem": "^2.21.54"
+  },
+  "scripts": {
+    "demo": "tsx ./src/index.ts",
+    "build": "tsc"
+  },
+  "type": "module"
+}

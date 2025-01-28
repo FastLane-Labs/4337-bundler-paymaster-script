@@ -1,0 +1,1701 @@
+[
+    {
+      "type": "constructor",
+      "inputs": [
+        {
+          "name": "_payoutAddress",
+          "type": "address",
+          "internalType": "address"
+        },
+        {
+          "name": "_escrowDuration",
+          "type": "uint48",
+          "internalType": "uint48"
+        }
+      ],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "ADDRESS_HUB",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "address",
+          "internalType": "address"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "CRANK_GAS_BUFFER",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint64",
+          "internalType": "uint64"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "CRANK_GAS_EXTRA",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint64",
+          "internalType": "uint64"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "CRANK_GAS_TOTAL",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint64",
+          "internalType": "uint64"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "LARGE_GAS",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint64",
+          "internalType": "uint64"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "MEDIUM_GAS",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint64",
+          "internalType": "uint64"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "MINIMUM_RESERVE",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint64",
+          "internalType": "uint64"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "MIN_BLOCKS_ACTIVE",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint64",
+          "internalType": "uint64"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "MIN_INTERVAL",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint64",
+          "internalType": "uint64"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "POLICY_ID",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint64",
+          "internalType": "uint64"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "SMALL_GAS",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint64",
+          "internalType": "uint64"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "accountBonds",
+      "inputs": [
+        {
+          "name": "",
+          "type": "address",
+          "internalType": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "accountNonces",
+      "inputs": [
+        {
+          "name": "",
+          "type": "address",
+          "internalType": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint64",
+          "internalType": "uint64"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "accountTasks",
+      "inputs": [
+        {
+          "name": "",
+          "type": "address",
+          "internalType": "address"
+        },
+        {
+          "name": "",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "cancelTask",
+      "inputs": [
+        {
+          "name": "taskHash",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "estimateRequiredBond",
+      "inputs": [
+        {
+          "name": "taskDef",
+          "type": "tuple",
+          "internalType": "struct TaskDefinition",
+          "components": [
+            {
+              "name": "task",
+              "type": "tuple",
+              "internalType": "struct Task",
+              "components": [
+                {
+                  "name": "from",
+                  "type": "address",
+                  "internalType": "address"
+                },
+                {
+                  "name": "gas",
+                  "type": "uint64",
+                  "internalType": "uint64"
+                },
+                {
+                  "name": "target",
+                  "type": "address",
+                  "internalType": "address"
+                },
+                {
+                  "name": "data",
+                  "type": "bytes",
+                  "internalType": "bytes"
+                },
+                {
+                  "name": "nonce",
+                  "type": "uint64",
+                  "internalType": "uint64"
+                }
+              ]
+            },
+            {
+              "name": "schedule",
+              "type": "tuple",
+              "internalType": "struct TaskSchedule",
+              "components": [
+                {
+                  "name": "startBlock",
+                  "type": "uint64",
+                  "internalType": "uint64"
+                },
+                {
+                  "name": "interval",
+                  "type": "uint64",
+                  "internalType": "uint64"
+                },
+                {
+                  "name": "executions",
+                  "type": "uint64",
+                  "internalType": "uint64"
+                },
+                {
+                  "name": "active",
+                  "type": "bool",
+                  "internalType": "bool"
+                },
+                {
+                  "name": "deadline",
+                  "type": "uint64",
+                  "internalType": "uint64"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "gasPrice",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "requiredBond",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "executeAndSchedule",
+      "inputs": [
+        {
+          "name": "taskDef",
+          "type": "tuple",
+          "internalType": "struct TaskDefinition",
+          "components": [
+            {
+              "name": "task",
+              "type": "tuple",
+              "internalType": "struct Task",
+              "components": [
+                {
+                  "name": "from",
+                  "type": "address",
+                  "internalType": "address"
+                },
+                {
+                  "name": "gas",
+                  "type": "uint64",
+                  "internalType": "uint64"
+                },
+                {
+                  "name": "target",
+                  "type": "address",
+                  "internalType": "address"
+                },
+                {
+                  "name": "data",
+                  "type": "bytes",
+                  "internalType": "bytes"
+                },
+                {
+                  "name": "nonce",
+                  "type": "uint64",
+                  "internalType": "uint64"
+                }
+              ]
+            },
+            {
+              "name": "schedule",
+              "type": "tuple",
+              "internalType": "struct TaskSchedule",
+              "components": [
+                {
+                  "name": "startBlock",
+                  "type": "uint64",
+                  "internalType": "uint64"
+                },
+                {
+                  "name": "interval",
+                  "type": "uint64",
+                  "internalType": "uint64"
+                },
+                {
+                  "name": "executions",
+                  "type": "uint64",
+                  "internalType": "uint64"
+                },
+                {
+                  "name": "active",
+                  "type": "bool",
+                  "internalType": "bool"
+                },
+                {
+                  "name": "deadline",
+                  "type": "uint64",
+                  "internalType": "uint64"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "name": "taskHash",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        },
+        {
+          "name": "success",
+          "type": "bool",
+          "internalType": "bool"
+        },
+        {
+          "name": "returnData",
+          "type": "bytes",
+          "internalType": "bytes"
+        }
+      ],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "executeQueuedTasks",
+      "inputs": [
+        {
+          "name": "targetGasReserve",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "executed",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "failed",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "getAccountNonce",
+      "inputs": [
+        {
+          "name": "account",
+          "type": "address",
+          "internalType": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint64",
+          "internalType": "uint64"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "getAccountTasks",
+      "inputs": [
+        {
+          "name": "account",
+          "type": "address",
+          "internalType": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "bytes32[]",
+          "internalType": "bytes32[]"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "getAccountTasksWithBlocks",
+      "inputs": [
+        {
+          "name": "account",
+          "type": "address",
+          "internalType": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "resultHashes",
+          "type": "bytes32[]",
+          "internalType": "bytes32[]"
+        },
+        {
+          "name": "nextBlocks",
+          "type": "uint64[]",
+          "internalType": "uint64[]"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "getNextBlocksForTasks",
+      "inputs": [
+        {
+          "name": "taskHashes",
+          "type": "bytes32[]",
+          "internalType": "bytes32[]"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "resultHashes",
+          "type": "bytes32[]",
+          "internalType": "bytes32[]"
+        },
+        {
+          "name": "nextBlocks",
+          "type": "uint64[]",
+          "internalType": "uint64[]"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "getNextExecutionBlocks",
+      "inputs": [
+        {
+          "name": "account",
+          "type": "address",
+          "internalType": "address"
+        },
+        {
+          "name": "taskHashes",
+          "type": "bytes32[]",
+          "internalType": "bytes32[]"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "resultHashes",
+          "type": "bytes32[]",
+          "internalType": "bytes32[]"
+        },
+        {
+          "name": "nextBlocks",
+          "type": "uint64[]",
+          "internalType": "uint64[]"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "getTaskInfo",
+      "inputs": [
+        {
+          "name": "taskHash",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "tuple",
+          "internalType": "struct ITaskManager.TaskInfo",
+          "components": [
+            {
+              "name": "definition",
+              "type": "tuple",
+              "internalType": "struct TaskDefinition",
+              "components": [
+                {
+                  "name": "task",
+                  "type": "tuple",
+                  "internalType": "struct Task",
+                  "components": [
+                    {
+                      "name": "from",
+                      "type": "address",
+                      "internalType": "address"
+                    },
+                    {
+                      "name": "gas",
+                      "type": "uint64",
+                      "internalType": "uint64"
+                    },
+                    {
+                      "name": "target",
+                      "type": "address",
+                      "internalType": "address"
+                    },
+                    {
+                      "name": "data",
+                      "type": "bytes",
+                      "internalType": "bytes"
+                    },
+                    {
+                      "name": "nonce",
+                      "type": "uint64",
+                      "internalType": "uint64"
+                    }
+                  ]
+                },
+                {
+                  "name": "schedule",
+                  "type": "tuple",
+                  "internalType": "struct TaskSchedule",
+                  "components": [
+                    {
+                      "name": "startBlock",
+                      "type": "uint64",
+                      "internalType": "uint64"
+                    },
+                    {
+                      "name": "interval",
+                      "type": "uint64",
+                      "internalType": "uint64"
+                    },
+                    {
+                      "name": "executions",
+                      "type": "uint64",
+                      "internalType": "uint64"
+                    },
+                    {
+                      "name": "active",
+                      "type": "bool",
+                      "internalType": "bool"
+                    },
+                    {
+                      "name": "deadline",
+                      "type": "uint64",
+                      "internalType": "uint64"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "metrics",
+              "type": "tuple",
+              "internalType": "struct TaskMetrics",
+              "components": [
+                {
+                  "name": "totalBonded",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "bondedBalance",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "executed",
+                  "type": "uint64",
+                  "internalType": "uint64"
+                },
+                {
+                  "name": "failed",
+                  "type": "uint64",
+                  "internalType": "uint64"
+                },
+                {
+                  "name": "totalGasUsed",
+                  "type": "uint64",
+                  "internalType": "uint64"
+                },
+                {
+                  "name": "lastExecuted",
+                  "type": "uint64",
+                  "internalType": "uint64"
+                },
+                {
+                  "name": "nextScheduled",
+                  "type": "uint64",
+                  "internalType": "uint64"
+                },
+                {
+                  "name": "lastFailed",
+                  "type": "uint64",
+                  "internalType": "uint64"
+                },
+                {
+                  "name": "hasExecuted",
+                  "type": "bool",
+                  "internalType": "bool"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "getTasksInRange",
+      "inputs": [
+        {
+          "name": "startBlock",
+          "type": "uint64",
+          "internalType": "uint64"
+        },
+        {
+          "name": "endBlock",
+          "type": "uint64",
+          "internalType": "uint64"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "bytes32[]",
+          "internalType": "bytes32[]"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "lastProcessedBlock",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint64",
+          "internalType": "uint64"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "lastProcessedIndex",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "payoutAddress",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "address",
+          "internalType": "address"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "scheduleTask",
+      "inputs": [
+        {
+          "name": "taskDef",
+          "type": "tuple",
+          "internalType": "struct TaskDefinition",
+          "components": [
+            {
+              "name": "task",
+              "type": "tuple",
+              "internalType": "struct Task",
+              "components": [
+                {
+                  "name": "from",
+                  "type": "address",
+                  "internalType": "address"
+                },
+                {
+                  "name": "gas",
+                  "type": "uint64",
+                  "internalType": "uint64"
+                },
+                {
+                  "name": "target",
+                  "type": "address",
+                  "internalType": "address"
+                },
+                {
+                  "name": "data",
+                  "type": "bytes",
+                  "internalType": "bytes"
+                },
+                {
+                  "name": "nonce",
+                  "type": "uint64",
+                  "internalType": "uint64"
+                }
+              ]
+            },
+            {
+              "name": "schedule",
+              "type": "tuple",
+              "internalType": "struct TaskSchedule",
+              "components": [
+                {
+                  "name": "startBlock",
+                  "type": "uint64",
+                  "internalType": "uint64"
+                },
+                {
+                  "name": "interval",
+                  "type": "uint64",
+                  "internalType": "uint64"
+                },
+                {
+                  "name": "executions",
+                  "type": "uint64",
+                  "internalType": "uint64"
+                },
+                {
+                  "name": "active",
+                  "type": "bool",
+                  "internalType": "bool"
+                },
+                {
+                  "name": "deadline",
+                  "type": "uint64",
+                  "internalType": "uint64"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "name": "taskHash",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        }
+      ],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "scheduledTasks",
+      "inputs": [
+        {
+          "name": "",
+          "type": "uint64",
+          "internalType": "uint64"
+        },
+        {
+          "name": "",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "schedulerBitmap",
+      "inputs": [
+        {
+          "name": "",
+          "type": "uint64",
+          "internalType": "uint64"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "taskBonds",
+      "inputs": [
+        {
+          "name": "",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "scheduledBond",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "executionBond",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "taskMetrics",
+      "inputs": [
+        {
+          "name": "",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "totalBonded",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "bondedBalance",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "executed",
+          "type": "uint64",
+          "internalType": "uint64"
+        },
+        {
+          "name": "failed",
+          "type": "uint64",
+          "internalType": "uint64"
+        },
+        {
+          "name": "totalGasUsed",
+          "type": "uint64",
+          "internalType": "uint64"
+        },
+        {
+          "name": "lastExecuted",
+          "type": "uint64",
+          "internalType": "uint64"
+        },
+        {
+          "name": "nextScheduled",
+          "type": "uint64",
+          "internalType": "uint64"
+        },
+        {
+          "name": "lastFailed",
+          "type": "uint64",
+          "internalType": "uint64"
+        },
+        {
+          "name": "hasExecuted",
+          "type": "bool",
+          "internalType": "bool"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "tasks",
+      "inputs": [
+        {
+          "name": "",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "task",
+          "type": "tuple",
+          "internalType": "struct Task",
+          "components": [
+            {
+              "name": "from",
+              "type": "address",
+              "internalType": "address"
+            },
+            {
+              "name": "gas",
+              "type": "uint64",
+              "internalType": "uint64"
+            },
+            {
+              "name": "target",
+              "type": "address",
+              "internalType": "address"
+            },
+            {
+              "name": "data",
+              "type": "bytes",
+              "internalType": "bytes"
+            },
+            {
+              "name": "nonce",
+              "type": "uint64",
+              "internalType": "uint64"
+            }
+          ]
+        },
+        {
+          "name": "schedule",
+          "type": "tuple",
+          "internalType": "struct TaskSchedule",
+          "components": [
+            {
+              "name": "startBlock",
+              "type": "uint64",
+              "internalType": "uint64"
+            },
+            {
+              "name": "interval",
+              "type": "uint64",
+              "internalType": "uint64"
+            },
+            {
+              "name": "executions",
+              "type": "uint64",
+              "internalType": "uint64"
+            },
+            {
+              "name": "active",
+              "type": "bool",
+              "internalType": "bool"
+            },
+            {
+              "name": "deadline",
+              "type": "uint64",
+              "internalType": "uint64"
+            }
+          ]
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "tracker",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "lastScheduledBlock",
+          "type": "uint64",
+          "internalType": "uint64"
+        },
+        {
+          "name": "lastScheduledIndex",
+          "type": "uint64",
+          "internalType": "uint64"
+        },
+        {
+          "name": "scheduledGas",
+          "type": "uint64",
+          "internalType": "uint64"
+        },
+        {
+          "name": "inQueueGas",
+          "type": "uint64",
+          "internalType": "uint64"
+        },
+        {
+          "name": "smallQueueGas",
+          "type": "uint64",
+          "internalType": "uint64"
+        },
+        {
+          "name": "smallQueueIndex",
+          "type": "uint64",
+          "internalType": "uint64"
+        },
+        {
+          "name": "mediumQueueGas",
+          "type": "uint64",
+          "internalType": "uint64"
+        },
+        {
+          "name": "mediumQueueIndex",
+          "type": "uint64",
+          "internalType": "uint64"
+        },
+        {
+          "name": "largeQueueGas",
+          "type": "uint64",
+          "internalType": "uint64"
+        },
+        {
+          "name": "largeQueueIndex",
+          "type": "uint64",
+          "internalType": "uint64"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "updateTaskSchedule",
+      "inputs": [
+        {
+          "name": "taskHash",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        },
+        {
+          "name": "newDefinition",
+          "type": "tuple",
+          "internalType": "struct TaskDefinition",
+          "components": [
+            {
+              "name": "task",
+              "type": "tuple",
+              "internalType": "struct Task",
+              "components": [
+                {
+                  "name": "from",
+                  "type": "address",
+                  "internalType": "address"
+                },
+                {
+                  "name": "gas",
+                  "type": "uint64",
+                  "internalType": "uint64"
+                },
+                {
+                  "name": "target",
+                  "type": "address",
+                  "internalType": "address"
+                },
+                {
+                  "name": "data",
+                  "type": "bytes",
+                  "internalType": "bytes"
+                },
+                {
+                  "name": "nonce",
+                  "type": "uint64",
+                  "internalType": "uint64"
+                }
+              ]
+            },
+            {
+              "name": "schedule",
+              "type": "tuple",
+              "internalType": "struct TaskSchedule",
+              "components": [
+                {
+                  "name": "startBlock",
+                  "type": "uint64",
+                  "internalType": "uint64"
+                },
+                {
+                  "name": "interval",
+                  "type": "uint64",
+                  "internalType": "uint64"
+                },
+                {
+                  "name": "executions",
+                  "type": "uint64",
+                  "internalType": "uint64"
+                },
+                {
+                  "name": "active",
+                  "type": "bool",
+                  "internalType": "bool"
+                },
+                {
+                  "name": "deadline",
+                  "type": "uint64",
+                  "internalType": "uint64"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "event",
+      "name": "ExecutorReimbursed",
+      "inputs": [
+        {
+          "name": "taskHash",
+          "type": "bytes32",
+          "indexed": true,
+          "internalType": "bytes32"
+        },
+        {
+          "name": "executor",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        },
+        {
+          "name": "amount",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "ProtocolFeeCollected",
+      "inputs": [
+        {
+          "name": "taskHash",
+          "type": "bytes32",
+          "indexed": true,
+          "internalType": "bytes32"
+        },
+        {
+          "name": "amount",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "TaskCancelled",
+      "inputs": [
+        {
+          "name": "taskHash",
+          "type": "bytes32",
+          "indexed": true,
+          "internalType": "bytes32"
+        },
+        {
+          "name": "owner",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "TaskConfigUpdated",
+      "inputs": [
+        {
+          "name": "taskHash",
+          "type": "bytes32",
+          "indexed": true,
+          "internalType": "bytes32"
+        },
+        {
+          "name": "owner",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "TaskExecuted",
+      "inputs": [
+        {
+          "name": "taskHash",
+          "type": "bytes32",
+          "indexed": true,
+          "internalType": "bytes32"
+        },
+        {
+          "name": "executor",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        },
+        {
+          "name": "success",
+          "type": "bool",
+          "indexed": false,
+          "internalType": "bool"
+        },
+        {
+          "name": "returnData",
+          "type": "bytes",
+          "indexed": false,
+          "internalType": "bytes"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "TaskExecutionRecorded",
+      "inputs": [
+        {
+          "name": "taskHash",
+          "type": "bytes32",
+          "indexed": true,
+          "internalType": "bytes32"
+        },
+        {
+          "name": "success",
+          "type": "bool",
+          "indexed": false,
+          "internalType": "bool"
+        },
+        {
+          "name": "gasUsed",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        },
+        {
+          "name": "successCount",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        },
+        {
+          "name": "failureCount",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "TaskInactiveDueToInsufficientBonds",
+      "inputs": [
+        {
+          "name": "taskHash",
+          "type": "bytes32",
+          "indexed": true,
+          "internalType": "bytes32"
+        },
+        {
+          "name": "owner",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        },
+        {
+          "name": "requiredBond",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "TaskScheduled",
+      "inputs": [
+        {
+          "name": "taskHash",
+          "type": "bytes32",
+          "indexed": true,
+          "internalType": "bytes32"
+        },
+        {
+          "name": "owner",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        },
+        {
+          "name": "nextBlock",
+          "type": "uint64",
+          "indexed": false,
+          "internalType": "uint64"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "TasksExecuted",
+      "inputs": [
+        {
+          "name": "executed",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        },
+        {
+          "name": "failed",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "error",
+      "name": "CannotModifyTask",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "ForwardingError",
+      "inputs": [
+        {
+          "name": "nestedError",
+          "type": "bytes4",
+          "internalType": "bytes4"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "InsufficientBond",
+      "inputs": [
+        {
+          "name": "required",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "actual",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "InvalidGasReserve",
+      "inputs": [
+        {
+          "name": "provided",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "minimum",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "InvalidPayoutAddress",
+      "inputs": [
+        {
+          "name": "payoutAddress",
+          "type": "address",
+          "internalType": "address"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "ReentrancyGuardReentrantCall",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "TaskAlreadyScheduled",
+      "inputs": [
+        {
+          "name": "taskHash",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "TaskExecutionFailed",
+      "inputs": [
+        {
+          "name": "taskHash",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        },
+        {
+          "name": "returnData",
+          "type": "bytes",
+          "internalType": "bytes"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "TaskExpired",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "TaskGasTooLarge",
+      "inputs": [
+        {
+          "name": "gas",
+          "type": "uint64",
+          "internalType": "uint64"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "TaskNotFound",
+      "inputs": [
+        {
+          "name": "taskHash",
+          "type": "bytes32",
+          "internalType": "bytes32"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "TaskSchedulePaymentFailed",
+      "inputs": [
+        {
+          "name": "from",
+          "type": "address",
+          "internalType": "address"
+        },
+        {
+          "name": "amount",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "TaskValidation_IntervalTooSmall",
+      "inputs": [
+        {
+          "name": "provided",
+          "type": "uint64",
+          "internalType": "uint64"
+        },
+        {
+          "name": "minimum",
+          "type": "uint64",
+          "internalType": "uint64"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "TaskValidation_InvalidDeadline",
+      "inputs": [
+        {
+          "name": "provided",
+          "type": "uint64",
+          "internalType": "uint64"
+        },
+        {
+          "name": "startBlock",
+          "type": "uint64",
+          "internalType": "uint64"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "TaskValidation_InvalidExecutions",
+      "inputs": [
+        {
+          "name": "executions",
+          "type": "uint64",
+          "internalType": "uint64"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "TaskValidation_InvalidMaximumGasLimit",
+      "inputs": [
+        {
+          "name": "gas",
+          "type": "uint64",
+          "internalType": "uint64"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "TaskValidation_InvalidMinimumGasLimit",
+      "inputs": [
+        {
+          "name": "gas",
+          "type": "uint64",
+          "internalType": "uint64"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "TaskValidation_InvalidNonce",
+      "inputs": [
+        {
+          "name": "provided",
+          "type": "uint64",
+          "internalType": "uint64"
+        },
+        {
+          "name": "expected",
+          "type": "uint64",
+          "internalType": "uint64"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "TaskValidation_InvalidSchedulingDistance",
+      "inputs": [
+        {
+          "name": "distance",
+          "type": "uint64",
+          "internalType": "uint64"
+        },
+        {
+          "name": "maxInterval",
+          "type": "uint64",
+          "internalType": "uint64"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "TaskValidation_InvalidTargetAddress",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "TaskValidation_StartBlockInPast",
+      "inputs": [
+        {
+          "name": "provided",
+          "type": "uint64",
+          "internalType": "uint64"
+        },
+        {
+          "name": "current",
+          "type": "uint64",
+          "internalType": "uint64"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "TaskValidation_TooManyActiveTasks",
+      "inputs": [
+        {
+          "name": "provided",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "maximum",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "Unauthorized",
+      "inputs": [
+        {
+          "name": "caller",
+          "type": "address",
+          "internalType": "address"
+        },
+        {
+          "name": "owner",
+          "type": "address",
+          "internalType": "address"
+        }
+      ]
+    }
+  ]
