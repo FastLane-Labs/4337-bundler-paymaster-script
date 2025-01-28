@@ -1,76 +1,66 @@
 import { smartAccount, publicClient, userClient } from "./user";
-import { initShBundler, pimlicoClient } from "./bundler";
+import { pimlicoClient, shBundler, sendUserOperation } from "./bundler";
 import { shMonadContract, paymasterContract } from "./contracts";
 import { PolicyBond } from "./types";
-import { toPackedUserOperation } from "viem/account-abstraction";
-import { Hex } from "viem";
 import { PAYMASTER } from "./constants";
+import { 
+    depositAndBondEOAToShmonad, 
+    depositAndBondSmartAccountToShmonad, 
+    depositToEntrypoint 
+} from "./deposit";
+
+//paymaster policy
+const policyId = await paymasterContract.read.policyID() as bigint;
+const depositAmount = 200000000000000000n;
+const transferAmount = 1000000000000000n;
+const bundler = shBundler;
+
+//smart account
+const userBalance = await publicClient.getBalance({address: smartAccount.address});
+console.log("smart account address", smartAccount.address);
+console.log("Smart Account MON Balance:", userBalance);
+
+const smartAccountBalance = await shMonadContract.read.balanceOf([smartAccount.address]);
+console.log("Smart Account shMON Balance:", smartAccountBalance);
+
+const smartAccountBond = await shMonadContract.read.getPolicyBond([policyId, smartAccount.address]) as PolicyBond;
+console.log("Smart Account shmonad unbonding", smartAccountBond.unbonding)
+console.log("Smart Account shmonad bonded", smartAccountBond.bonded)
+
+if (smartAccountBond.bonded === 0n) {
+    console.log("Depositing and bonding smart account to shmonad");
+    await depositAndBondSmartAccountToShmonad(pimlicoClient, policyId, depositAmount);
+}
+
+//sponsor
+const sponsorBalance = await publicClient.getBalance({address: userClient.account.address});
+console.log("Sponsor MON Balance:", sponsorBalance);
+
+const sponsorBond = await shMonadContract.read.getPolicyBond([policyId, userClient.account.address]) as PolicyBond;
+console.log("Sponsor shmonad unbonding", sponsorBond.unbonding)
+console.log("Sponsor shmonad bonded", sponsorBond.bonded)
+
+if (sponsorBond.bonded === 0n) {
+    console.log("Depositing and bonding sponsor to shmonad");
+    await depositAndBondEOAToShmonad(userClient, policyId, depositAmount);
+}
 
 //paymaster
-const policyId = await paymasterContract.read.policyID();
-console.log("Policy ID:", policyId);
+const paymasterDeposit = await paymasterContract.read.getDeposit();
+console.log("paymaster entrypoint deposit", paymasterDeposit)
 
-const depositedAmount = await shMonadContract.read.balanceOf([smartAccount.address]);
-console.log("shMonad Deposited Amount:", depositedAmount);
+const paymasterBond = await shMonadContract.read.getPolicyBond([policyId, PAYMASTER]) as PolicyBond;
+console.log("paymaster shmonad unbonding", paymasterBond.unbonding)
+console.log("paymaster shmonad bonded", paymasterBond.bonded)
 
-const policyBond = await shMonadContract.read.getPolicyBond([policyId, smartAccount.address]) as PolicyBond;
-console.log("Policy Unbonding Amount:", policyBond.unbonding);
-console.log("Policy Bonded Amount:", policyBond.bonded);
+if (paymasterBond.bonded === 0n) {
+    console.log("Depositing and bonding paymaster to shmonad");
+    await depositToEntrypoint(pimlicoClient, depositAmount);
+}
 
-const userBalance = await publicClient.getBalance({address: smartAccount.address});
-console.log("User Balance:", userBalance);
-
-const shBundler = initShBundler(smartAccount, publicClient);
-console.log("Smart Account:", shBundler.account?.address);
-
-const bundler = pimlicoClient;
-
-const transferAmount = 1000000000000000n
-const userOperation = await bundler.prepareUserOperation({
-    account: smartAccount,
-    calls: [{
-        to: userClient.account.address,
-        value: transferAmount,
-        data: "0x"
-    }],
-    maxFeePerGas: 77500000000n,
-    maxPriorityFeePerGas: 2500000000n,
-})
-
-const validAfter = 0n
-const validUntil = BigInt(Date.now() + 1000 * 60 * 60 * 24) + BigInt(100)
-
-const packedUserOperation = toPackedUserOperation(userOperation);
-
-const hash = await paymasterContract.read.getHash([
-    packedUserOperation,
-    validUntil,
-    validAfter
-  ]);
-
-const sponsorSignature = await userClient.signMessage({
-    message: { raw: hash },
-});
-
-userOperation.paymasterData = 
-    '0x01' +
-    userClient.account.address.slice(2) + 
-    validUntil.toString(16).padStart(12, '0') +
-    validAfter.toString(16).padStart(12, '0') + 
-    sponsorSignature.slice(2)    
-userOperation.paymaster = PAYMASTER as Hex
-userOperation.paymasterVerificationGasLimit = 500000n
-userOperation.paymasterPostOpGasLimit = 500000n
-
-const signature = await smartAccount.signUserOperation(userOperation);
-userOperation.signature = signature as Hex
-
-
-const userOpHash = await bundler.sendUserOperation({
-  ...userOperation,
-})
-
+//send user operation with shBundler
+const userOpHash = await sendUserOperation(bundler, transferAmount, 'sponsor');
 console.log("User Operation Hash:", userOpHash);
 
-// const userOpReceipt = await shBundler.waitForUserOperationReceipt({hash: userOpHash});
-// console.log("User Operation Receipt:", userOpReceipt);
+const userOpReceipt = await shBundler.waitForUserOperationReceipt({hash: userOpHash});
+console.log("User Operation Receipt:", userOpReceipt);

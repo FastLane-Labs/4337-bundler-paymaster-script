@@ -1,5 +1,5 @@
-import { createPublicClient, createWalletClient, http, webSocket } from "viem";
-import { CHAIN, RPC_URL, EOA, SHBUNDLER_URL, DEPLOYER_EOA } from "./constants";
+import { createPublicClient, createWalletClient, http } from "viem";
+import { CHAIN, RPC_URL, EOA, DEPLOYER_EOA } from "./constants";
 import { toSafeSmartAccount } from "permissionless/accounts";
 import { entryPoint07Address } from "viem/account-abstraction";
 // user client

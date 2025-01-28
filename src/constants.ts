@@ -11,10 +11,10 @@ const SHMONAD = process.env.SHMONAD as Hex;
 const PAYMASTER = process.env.PAYMASTER as Hex;
 const DEPLOYER_PRIVATE_KEY = process.env.DEPLOYER_PRIVATE_KEY as Hex;
 const PIMLICO_URL = process.env.PIMLICO_URL as string;
+const CHAIN_ID = process.env.CHAIN_ID as Hex;
 
 const EOA = privateKeyToAccount(PRIVATE_KEY);
 const DEPLOYER_EOA = privateKeyToAccount(DEPLOYER_PRIVATE_KEY);
-const CHAIN_ID = process.env.CHAIN_ID as Hex;
 
 const CHAIN: Chain = {
   id: Number(CHAIN_ID),
