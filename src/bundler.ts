@@ -1,11 +1,14 @@
 import { Client, http } from "viem";
-import { CHAIN, SHBUNDLER_URL } from "./constants";
+import { CHAIN, SHBUNDLER_URL, PIMLICO_URL } from "./constants";
 import { 
   createBundlerClient, 
   BundlerClient,
   SmartAccount,
+  createPaymasterClient,
 } from "viem/account-abstraction";
 import { ShBundler, GasPriceResult, GasPriceRequest } from "./types";
+
+import { smartAccount, publicClient } from "./user";
 
 function createShBundler(client: BundlerClient): ShBundler {
     return {
@@ -31,4 +34,17 @@ function initShBundler(smartAccount: SmartAccount, publicClient: Client): ShBund
     );
 }
 
-export { initShBundler };
+const paymasterClient = createPaymasterClient({ 
+    transport: http('https://public.pimlico.io/v2/10143/rpc'), 
+})
+
+const pimlicoClient = createBundlerClient({
+    transport: http(PIMLICO_URL), 
+    name: "Pimlico",
+    account: smartAccount,
+    client: publicClient,
+    chain: CHAIN,
+    // paymaster: paymasterClient,
+})
+
+export { initShBundler, pimlicoClient };

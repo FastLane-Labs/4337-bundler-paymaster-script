@@ -6,12 +6,11 @@ dotenv.config();
 
 const RPC_URL = process.env.RPC_URL as string;
 const SHBUNDLER_URL = process.env.SHBUNDLER_URL as string;
-const PIMLICO_URL = process.env.PIMLICO_URL as string;
 const PRIVATE_KEY = process.env.PRIVATE_KEY as Hex;
 const SHMONAD = process.env.SHMONAD as Hex;
 const PAYMASTER = process.env.PAYMASTER as Hex;
-const SHBUNDLER_ADDRESS = process.env.SHBUNDLER_ADDRESS as Hex;
 const DEPLOYER_PRIVATE_KEY = process.env.DEPLOYER_PRIVATE_KEY as Hex;
+const PIMLICO_URL = process.env.PIMLICO_URL as string;
 
 const EOA = privateKeyToAccount(PRIVATE_KEY);
 const DEPLOYER_EOA = privateKeyToAccount(DEPLOYER_PRIVATE_KEY);
@@ -19,11 +18,11 @@ const CHAIN_ID = process.env.CHAIN_ID as Hex;
 
 const CHAIN: Chain = {
   id: Number(CHAIN_ID),
-  name: 'Sepolia',
+  name: 'Monad Testnet',
   nativeCurrency: {
     decimals: 18,
-    name: 'Sepolia',
-    symbol: 'ETH',
+    name: 'Monad',
+    symbol: 'MON',
   },
   rpcUrls: {
     default: { http: [RPC_URL] },
@@ -37,9 +36,8 @@ export {
   CHAIN, 
   RPC_URL, 
   SHBUNDLER_URL, 
-  PIMLICO_URL, 
   PRIVATE_KEY, 
   SHMONAD, 
   PAYMASTER,
-  SHBUNDLER_ADDRESS,
+  PIMLICO_URL,
 };

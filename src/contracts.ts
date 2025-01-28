@@ -1,7 +1,7 @@
 import shmonadAbi from "./abi/shmonad.json";
 import paymasterAbi from "./abi/paymaster.json";
 import { getContract } from "viem";
-import { publicClient, smartAccount } from "./user";
+import { publicClient, userClient } from "./user";
 import { PAYMASTER, SHMONAD } from "./constants";
 
 const shMonadContract = getContract({
@@ -9,7 +9,7 @@ const shMonadContract = getContract({
   abi: shmonadAbi,
   client: {
     public: publicClient,
-    account: smartAccount,
+    account: userClient,
   },
 });
 
@@ -18,7 +18,7 @@ const paymasterContract = getContract({
   abi: paymasterAbi,
   client: {
     public: publicClient,
-    account: smartAccount,
+    account: userClient,
   },
 });
 

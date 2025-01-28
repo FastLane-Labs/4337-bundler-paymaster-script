@@ -1,12 +1,10 @@
 import { smartAccount, publicClient, userClient } from "./user";
-import { initShBundler } from "./bundler";
+import { initShBundler, pimlicoClient } from "./bundler";
 import { shMonadContract, paymasterContract } from "./contracts";
 import { PolicyBond } from "./types";
-import { Address, concatHex, Hex, http, parseSignature, toPrefixedMessage } from "viem";
-import { CHAIN, PAYMASTER, PIMLICO_URL, PRIVATE_KEY, SHBUNDLER_ADDRESS } from "./constants";
-import { createBundlerClient, createPaymasterClient, PackedUserOperation, toPackedUserOperation } from "viem/account-abstraction";
-import { entryPoint07Address } from "viem/account-abstraction";
-import { signMessage } from "viem/accounts";
+import { toPackedUserOperation } from "viem/account-abstraction";
+import { Hex } from "viem";
+import { PAYMASTER } from "./constants";
 
 //paymaster
 const policyId = await paymasterContract.read.policyID();
@@ -22,35 +20,21 @@ console.log("Policy Bonded Amount:", policyBond.bonded);
 const userBalance = await publicClient.getBalance({address: smartAccount.address});
 console.log("User Balance:", userBalance);
 
-const bundlerBalance = await publicClient.getBalance({address: SHBUNDLER_ADDRESS});
-console.log("Bundler Balance:", bundlerBalance);
-
-const paymasterClient = createPaymasterClient({ 
-    transport: http('https://public.pimlico.io/v2/11155111/rpc'), 
-})
-
-const pimlicoClient = createBundlerClient({
-    transport: http(PIMLICO_URL), 
-    name: "Pimlico",
-    account: smartAccount,
-    client: publicClient,
-    chain: CHAIN,
-})
-
 const shBundler = initShBundler(smartAccount, publicClient);
 console.log("Smart Account:", shBundler.account?.address);
 
+const bundler = pimlicoClient;
+
 const transferAmount = 1000000000000000n
-const gasPrice = await shBundler.getUserOperationGasPrice();
-const userOperation = await pimlicoClient.prepareUserOperation({
+const userOperation = await bundler.prepareUserOperation({
     account: smartAccount,
     calls: [{
         to: userClient.account.address,
         value: transferAmount,
         data: "0x"
     }],
-    maxFeePerGas: gasPrice.fast.maxFeePerGas,
-    maxPriorityFeePerGas: gasPrice.fast.maxPriorityFeePerGas,
+    maxFeePerGas: 77500000000n,
+    maxPriorityFeePerGas: 2500000000n,
 })
 
 const validAfter = 0n
@@ -64,12 +48,9 @@ const hash = await paymasterContract.read.getHash([
     validAfter
   ]);
 
-const sponsorSignature = await signMessage({
+const sponsorSignature = await userClient.signMessage({
     message: { raw: hash },
-    privateKey: PRIVATE_KEY,
-  });
-
-console.log("Sponsor Signature:", sponsorSignature)
+});
 
 userOperation.paymasterData = 
     '0x01' +
@@ -85,9 +66,11 @@ const signature = await smartAccount.signUserOperation(userOperation);
 userOperation.signature = signature as Hex
 
 
-const userOpHash = await pimlicoClient.sendUserOperation({
+const userOpHash = await bundler.sendUserOperation({
   ...userOperation,
 })
 
-const userOpReceipt = await pimlicoClient.waitForUserOperationReceipt({hash: userOpHash});
-console.log("User Operation Receipt:", userOpReceipt);
+console.log("User Operation Hash:", userOpHash);
+
+// const userOpReceipt = await shBundler.waitForUserOperationReceipt({hash: userOpHash});
+// console.log("User Operation Receipt:", userOpReceipt);
