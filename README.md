@@ -2,7 +2,7 @@
 Fastlane is deploying best-in-class 4337 infrastructure via a liquid staking token - shMonad, a 4337 compliant bundler and a paymaster leveraging shMonad.
 
 ## shMonad
-To get started with shMonad, vist fastlane.xyz. 
+To get started with shMonad, vist [shMonad](shmonad.xyz). 
 
 shMonad is a liquid staking token that generates yield for users and gives apps and their end users UI super power. Users and apps can deposit MON to receive shMON which generates yield from the staking services. Additionally, anyone can bond their shMON to Fastlane services, like our 4337 paymaster. 
 
