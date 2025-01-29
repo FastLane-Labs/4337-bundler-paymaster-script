@@ -1,25 +1,35 @@
-import shmonadAbi from "./abi/shmonad.json";
-import paymasterAbi from "./abi/paymaster.json";
-import { getContract } from "viem";
-import { publicClient, userClient } from "./user";
-import { PAYMASTER, SHMONAD } from "./constants";
+import { Client, getContract, Hex } from "viem";
 
-const shMonadContract = getContract({
-  address: SHMONAD,
-  abi: shmonadAbi,
-  client: {
-    public: publicClient,
-    account: userClient,
-  },
-});
 
-const paymasterContract = getContract({
-  address: PAYMASTER,
-  abi: paymasterAbi,
-  client: {
-    public: publicClient,
-    account: userClient,
-  },
-});
+async function initContract(address: Hex, abi: any, publicClient: Client, userClient: Client) {
+  return getContract({
+    address: address,
+    abi: abi,
+    client: {
+      public: publicClient,
+      account: userClient,
+    },
+  });
+}
 
-export { shMonadContract, paymasterContract };
+function paymasterMode(
+  mode: 'user' | 'sponsor', 
+  validUntil: bigint, 
+  validAfter: bigint, 
+  sponsorSignature: Hex,
+  userClient: Client
+) {
+  if (mode === 'user') {
+      return '0x00' as Hex;
+  } else {
+      const accountAddress = userClient.account?.address;
+      if (!accountAddress) {
+          throw new Error("userClient.account is undefined");
+      }
+      return `0x01${accountAddress.slice(2)}${validUntil.toString(16).padStart(12, '0')}${validAfter.toString(16).padStart(12, '0')}${sponsorSignature.slice(2)}`;
+  }
+}
+
+
+
+export { initContract, paymasterMode };

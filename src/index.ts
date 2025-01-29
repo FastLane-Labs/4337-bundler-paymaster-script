@@ -1,14 +1,27 @@
 import { smartAccount, publicClient, userClient } from "./user";
-import { pimlicoClient, shBundler, sendUserOperation } from "./bundler";
-import { shMonadContract, paymasterContract } from "./contracts";
+import { shBundler } from "./bundler";
 import { PolicyBond } from "./types";
-import { PAYMASTER } from "./constants";
+import { initContract, paymasterMode } from "./contracts";
 import { 
     depositAndBondEOAToShmonad, 
     depositAndBondSmartAccountToShmonad, 
     depositToEntrypoint 
 } from "./deposit";
+import { ADDRESS_HUB, PAYMASTER_POINTER, SHMONAD_POINTER } from "./constants";
+import addressHubAbi from "./abi/addresshub.json";
+import paymasterAbi from "./abi/paymaster.json";
+import shmonadAbi from "./abi/shmonad.json";    
+import { Hex } from "viem";
+import { toPackedUserOperation } from "viem/account-abstraction";
 
+
+// initialize contracts and get addresses
+const addressHubContract = await initContract(ADDRESS_HUB, addressHubAbi, publicClient, userClient)
+const PAYMASTER = await addressHubContract.read.getAddressFromPointer([BigInt(PAYMASTER_POINTER)]) as Hex
+const SHMONAD = await addressHubContract.read.getAddressFromPointer([BigInt(SHMONAD_POINTER)]) as Hex
+
+const paymasterContract = await initContract(PAYMASTER, paymasterAbi, publicClient, userClient);
+const shMonadContract = await initContract(SHMONAD, shmonadAbi, publicClient, userClient);
 //paymaster policy
 const policyId = await paymasterContract.read.policyID() as bigint;
 const depositAmount = 200000000000000000n;
@@ -29,7 +42,7 @@ console.log("Smart Account shmonad bonded", smartAccountBond.bonded)
 
 if (smartAccountBond.bonded === 0n) {
     console.log("Depositing and bonding smart account to shmonad");
-    await depositAndBondSmartAccountToShmonad(pimlicoClient, policyId, depositAmount);
+    await depositAndBondSmartAccountToShmonad(bundler, policyId, depositAmount, SHMONAD);
 }
 
 //sponsor
@@ -42,7 +55,7 @@ console.log("Sponsor shmonad bonded", sponsorBond.bonded)
 
 if (sponsorBond.bonded === 0n) {
     console.log("Depositing and bonding sponsor to shmonad");
-    await depositAndBondEOAToShmonad(userClient, policyId, depositAmount);
+    await depositAndBondEOAToShmonad(userClient, policyId, depositAmount, SHMONAD);
 }
 
 //paymaster
@@ -55,11 +68,46 @@ console.log("paymaster shmonad bonded", paymasterBond.bonded)
 
 if (paymasterBond.bonded === 0n) {
     console.log("Depositing and bonding paymaster to shmonad");
-    await depositToEntrypoint(pimlicoClient, depositAmount);
+    await depositToEntrypoint(bundler, depositAmount, PAYMASTER);
 }
 
 //send user operation with shBundler
-const userOpHash = await sendUserOperation(bundler, transferAmount, 'sponsor');
+//lots of hardcodes ... bad ... for demo purposes only
+const userOperation = await bundler.prepareUserOperation({
+    account: smartAccount,
+    calls: [{
+        to: userClient.account.address,
+        value: transferAmount,
+        data: "0x"
+    }],
+    maxFeePerGas: 77500000000n,
+    maxPriorityFeePerGas: 2500000000n,
+    preVerificationGas: 200000n,
+    verificationGasLimit: 200000n,
+    callGasLimit: 200000n,
+})
+
+const validAfter = 0n
+const validUntil = BigInt(Date.now() + 1000 * 60 * 60 * 24) + BigInt(100)
+
+const hash = await paymasterContract.read.getHash([
+    toPackedUserOperation(userOperation),
+    validUntil,
+    validAfter
+]);
+const sponsorSignature = await userClient.signMessage({
+    message: { raw: hash },
+});
+
+userOperation.paymasterData = paymasterMode('sponsor', validUntil, validAfter, sponsorSignature, userClient)
+userOperation.paymaster = PAYMASTER
+userOperation.paymasterVerificationGasLimit = 500000n
+userOperation.paymasterPostOpGasLimit = 500000n
+
+const signature = await smartAccount.signUserOperation(userOperation);
+userOperation.signature = signature as Hex
+
+const userOpHash = await shBundler.sendUserOperation(userOperation);
 console.log("User Operation Hash:", userOpHash);
 
 const userOpReceipt = await shBundler.waitForUserOperationReceipt({hash: userOpHash});
