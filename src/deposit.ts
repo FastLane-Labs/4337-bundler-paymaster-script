@@ -1,4 +1,4 @@
-import { encodeFunctionData, Hex, WalletClient } from "viem";
+import { encodeFunctionData, Hex } from "viem";
 import { publicClient, userClient } from "./user";
 import shmonadAbi from "./abi/shmonad.json";
 import paymasterAbi from "./abi/paymaster.json";

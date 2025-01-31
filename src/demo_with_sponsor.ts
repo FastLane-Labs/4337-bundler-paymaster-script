@@ -2,11 +2,7 @@ import { smartAccount, publicClient, userClient } from "./user";
 import { shBundler } from "./bundler";
 import { PolicyBond } from "./types";
 import { initContract, paymasterMode } from "./contracts";
-import {
-  depositAndBondEOAToShmonad,
-  depositAndBondSmartAccountToShmonad,
-  depositToEntrypoint,
-} from "./deposit";
+import { depositAndBondEOAToShmonad, depositToEntrypoint } from "./deposit";
 import { ADDRESS_HUB, PAYMASTER_POINTER, SHMONAD_POINTER } from "./constants";
 import addressHubAbi from "./abi/addresshub.json";
 import paymasterAbi from "./abi/paymaster.json";

@@ -3,7 +3,6 @@ import { shBundler } from "./bundler";
 import { PolicyBond } from "./types";
 import { initContract, paymasterMode } from "./contracts";
 import {
-  depositAndBondEOAToShmonad,
   depositAndBondSmartAccountToShmonad,
   depositToEntrypoint,
 } from "./deposit";
@@ -12,7 +11,6 @@ import addressHubAbi from "./abi/addresshub.json";
 import paymasterAbi from "./abi/paymaster.json";
 import shmonadAbi from "./abi/shmonad.json";
 import { Hex } from "viem";
-import { toPackedUserOperation } from "viem/account-abstraction";
 
 // initialize contracts and get addresses
 const addressHubContract = await initContract(
