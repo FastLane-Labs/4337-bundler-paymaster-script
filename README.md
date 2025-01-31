@@ -37,3 +37,15 @@ const shBundler = initShBundler(smartAccount, publicClient);
 The Fastlane paymaster allows anyone to stake their full MON balance and not have to worry about needing MON for gas fees. Just deposit your MON for shMON and bond that shMON to the paymaster, then every time you send a 4337 user operation, you can use the Fastlane paymaster address as your paymaster and you can then use your shMON for gas fees. 
 
 For apps and wallets that want to sponsor gas fees for their users, checkout the script for full details.
+
+## Demo
+
+### Self Sponsored
+```bash
+npm run demo:self-sponsored
+```
+
+### With Sponsor
+```bash
+npm run demo:with-sponsor
+```
