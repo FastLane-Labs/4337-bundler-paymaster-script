@@ -1,6 +1,8 @@
 import { BundlerClient } from "viem/account-abstraction";
 
-type ShBundler = BundlerClient;
+type ShBundler = BundlerClient & {
+  getUserOperationGasPrice: () => Promise<GasPriceResult>;
+};
 
 type GasPriceResult = {
   fast: {

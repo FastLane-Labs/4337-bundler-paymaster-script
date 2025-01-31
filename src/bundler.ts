@@ -1,24 +1,21 @@
-import { Client, Hex, http } from "viem";
+import { Client, http } from "viem";
 import { CHAIN, SHBUNDLER_URL } from "./constants";
 import {
   createBundlerClient,
   BundlerClient,
   SmartAccount,
 } from "viem/account-abstraction";
-import { ShBundler, GasPriceRequest } from "./types";
+import { ShBundler, GasPriceRequest, GasPriceResult } from "./types";
 import { smartAccount, publicClient } from "./user";
 
 function createShBundler(client: BundlerClient): ShBundler {
   return {
     ...client,
-    userOperation: {
-      estimateFeesPerGas: async () =>
-        (
-          await client.request<GasPriceRequest>({
-            method: "gas_getUserOperationGasPrice",
-            params: [],
-          })
-        ).slow,
+    getUserOperationGasPrice: async (): Promise<GasPriceResult> => {
+      return await client.request<GasPriceRequest>({
+        method: "gas_getUserOperationGasPrice",
+        params: [],
+      });
     },
   };
 }

@@ -26,16 +26,16 @@ function paymasterMode(
   if (mode === "user") {
     return "0x00" as Hex;
   } else {
-    if (!userClient) {
+    if (userClient === undefined) {
       throw new Error("userClient is undefined");
     }
-    if (!validUntil) {
+    if (validUntil === undefined) {
       throw new Error("validUntil is undefined");
     }
-    if (!validAfter) {
+    if (validAfter === undefined) {
       throw new Error("validAfter is undefined");
     }
-    if (!sponsorSignature) {
+    if (sponsorSignature === undefined) {
       throw new Error("sponsorSignature is undefined");
     }
 

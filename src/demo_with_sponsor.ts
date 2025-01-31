@@ -82,6 +82,7 @@ const userOperation = await shBundler.prepareUserOperation({
       to: userClient.account.address,
     },
   ],
+  ...(await shBundler.getUserOperationGasPrice()).slow,
 });
 
 const validAfter = 0n;

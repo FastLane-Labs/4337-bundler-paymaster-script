@@ -2,10 +2,10 @@ import { encodeFunctionData, Hex } from "viem";
 import { publicClient, userClient } from "./user";
 import shmonadAbi from "./abi/shmonad.json";
 import paymasterAbi from "./abi/paymaster.json";
-import { BundlerClient } from "viem/_types/account-abstraction";
+import { ShBundler } from "./types";
 
 async function depositAndBondSmartAccountToShmonad(
-  bundler: BundlerClient,
+  shBundler: ShBundler,
   policyId: bigint,
   depositAmount: bigint,
   shmonad: Hex
@@ -16,7 +16,7 @@ async function depositAndBondSmartAccountToShmonad(
     args: [policyId, depositAmount],
   });
 
-  const hash = await bundler.sendUserOperation({
+  const hash = await shBundler.sendUserOperation({
     calls: [
       {
         to: shmonad,
@@ -24,10 +24,11 @@ async function depositAndBondSmartAccountToShmonad(
         data,
       },
     ],
+    ...(await shBundler.getUserOperationGasPrice()).slow,
   });
 
   console.log("Hash:", hash);
-  await bundler.waitForUserOperationReceipt({ hash });
+  await shBundler.waitForUserOperationReceipt({ hash });
 }
 
 async function depositToEntrypoint(depositAmount: bigint, paymaster: Hex) {
