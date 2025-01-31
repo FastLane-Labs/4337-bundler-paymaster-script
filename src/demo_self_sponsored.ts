@@ -65,8 +65,6 @@ const smartAccountBond = (await shMonadContract.read.getPolicyBond([
 console.log("Smart Account shmonad unbonding", smartAccountBond.unbonding);
 console.log("Smart Account shmonad bonded", smartAccountBond.bonded);
 
-// process.exit(0);
-
 if (smartAccountBond.bonded < depositAmount) {
   const amountToBond = depositAmount - smartAccountBond.bonded;
 
@@ -92,8 +90,6 @@ if (smartAccountBond.bonded < depositAmount) {
     SHMONAD
   );
 }
-
-// process.exit(0);
 
 // paymaster
 const paymasterDeposit = await paymasterContract.read.getDeposit([]);
