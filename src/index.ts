@@ -23,7 +23,7 @@ const SHMONAD = await addressHubContract.read.getAddressFromPointer([BigInt(SHMO
 const paymasterContract = await initContract(PAYMASTER, paymasterAbi, publicClient, userClient);
 const shMonadContract = await initContract(SHMONAD, shmonadAbi, publicClient, userClient);
 //paymaster policy
-const policyId = await paymasterContract.read.policyID() as bigint;
+const policyId = await paymasterContract.read.policyID([]) as bigint;
 const depositAmount = 200000000000000000n;
 const transferAmount = 1000000000000000n;
 const bundler = shBundler;
@@ -59,7 +59,7 @@ if (sponsorBond.bonded === 0n) {
 }
 
 //paymaster
-const paymasterDeposit = await paymasterContract.read.getDeposit();
+const paymasterDeposit = await paymasterContract.read.getDeposit([]);
 console.log("paymaster entrypoint deposit", paymasterDeposit)
 
 const paymasterBond = await shMonadContract.read.getPolicyBond([policyId, PAYMASTER]) as PolicyBond;
@@ -96,10 +96,10 @@ const hash = await paymasterContract.read.getHash([
     validAfter
 ]);
 const sponsorSignature = await userClient.signMessage({
-    message: { raw: hash },
+    message: { raw: hash as Hex },
 });
 
-userOperation.paymasterData = paymasterMode('sponsor', validUntil, validAfter, sponsorSignature, userClient)
+userOperation.paymasterData = paymasterMode('sponsor', validUntil, validAfter, sponsorSignature, userClient) as Hex
 userOperation.paymaster = PAYMASTER
 userOperation.paymasterVerificationGasLimit = 500000n
 userOperation.paymasterPostOpGasLimit = 500000n
