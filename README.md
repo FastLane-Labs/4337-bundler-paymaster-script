@@ -13,7 +13,7 @@ For apps and wallets, sponsor your users' gas fees and earn yield on your MON ho
 ## Bundler aka shBundler
 shBundler is a fully compliant 4337 bundler that can be easily integrated as an user operation RPC or programmatically with viem or ethers.
 
-RPC: https://dev.4337-shbundler-fra.fastlane-labs.xyz
+RPC: https://monad-testnet.4337-shbundler-fra.fastlane-labs.xyz
 
 Viem Example:
 
