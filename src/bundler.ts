@@ -11,11 +11,14 @@ import { smartAccount, publicClient, userClient } from "./user";
 function createShBundler(client: BundlerClient): ShBundler {
   return {
     ...client,
-    getUserOperationGasPrice: async (): Promise<GasPriceResult> => {
-      return await client.request<GasPriceRequest>({
-        method: "gas_getUserOperationGasPrice",
-        params: [],
-      });
+    userOperation: {
+      estimateFeesPerGas: async () =>
+        (
+          await client.request<GasPriceRequest>({
+            method: "gas_getUserOperationGasPrice",
+            params: [],
+          })
+        ).slow,
     },
   };
 }

@@ -18,14 +18,27 @@ async function initContract(
 
 function paymasterMode(
   mode: "user" | "sponsor",
-  validUntil: bigint,
-  validAfter: bigint,
-  sponsorSignature: Hex,
-  userClient: Client
+  validUntil?: bigint,
+  validAfter?: bigint,
+  sponsorSignature?: Hex,
+  userClient?: Client
 ) {
   if (mode === "user") {
     return "0x00" as Hex;
   } else {
+    if (!userClient) {
+      throw new Error("userClient is undefined");
+    }
+    if (!validUntil) {
+      throw new Error("validUntil is undefined");
+    }
+    if (!validAfter) {
+      throw new Error("validAfter is undefined");
+    }
+    if (!sponsorSignature) {
+      throw new Error("sponsorSignature is undefined");
+    }
+
     const accountAddress = userClient.account?.address;
     if (!accountAddress) {
       throw new Error("userClient.account is undefined");

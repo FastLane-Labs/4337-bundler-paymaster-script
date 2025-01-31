@@ -1,8 +1,6 @@
 import { BundlerClient } from "viem/account-abstraction";
 
-type ShBundler = BundlerClient & {
-  getUserOperationGasPrice: () => Promise<GasPriceResult>;
-};
+type ShBundler = BundlerClient;
 
 type GasPriceResult = {
   fast: {
@@ -18,6 +16,7 @@ type GasPriceResult = {
     maxPriorityFeePerGas: bigint;
   };
 };
+
 type GasPriceRequest = {
   Method: "gas_getUserOperationGasPrice";
   Parameters: [];
