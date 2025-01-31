@@ -7,8 +7,8 @@
     "viem": "^2.21.54"
   },
   "scripts": {
-    "demo:self_sponsored": "tsx ./src/demo_self_sponsored.ts",
-    "demo:with_sponsor": "tsx ./src/demo_with_sponsor.ts",
+    "demo:self-sponsored": "tsx ./src/demo_self_sponsored.ts",
+    "demo:with-sponsor": "tsx ./src/demo_with_sponsor.ts",
     "build": "tsc"
   },
   "type": "module"
