@@ -1,28 +1,36 @@
 import { BundlerClient } from "viem/account-abstraction";
+import { Hex } from "viem";
 
 type ShBundler = BundlerClient & {
   getUserOperationGasPrice: () => Promise<GasPriceResult>;
 };
 
+type GasPricesEncoded = {
+  maxFeePerGas: Hex;
+  maxPriorityFeePerGas: Hex;
+};
+
+type GasPriceResultEncoded = {
+  fast: GasPricesEncoded;
+  standard: GasPricesEncoded;
+  slow: GasPricesEncoded;
+};
+
+type GasPrices = {
+  maxFeePerGas: bigint;
+  maxPriorityFeePerGas: bigint;
+};
+
 type GasPriceResult = {
-  fast: {
-    maxFeePerGas: bigint;
-    maxPriorityFeePerGas: bigint;
-  };
-  standard: {
-    maxFeePerGas: bigint;
-    maxPriorityFeePerGas: bigint;
-  };
-  slow: {
-    maxFeePerGas: bigint;
-    maxPriorityFeePerGas: bigint;
-  };
+  fast: GasPrices;
+  standard: GasPrices;
+  slow: GasPrices;
 };
 
 type GasPriceRequest = {
   Method: "gas_getUserOperationGasPrice";
   Parameters: [];
-  ReturnType: GasPriceResult;
+  ReturnType: GasPriceResultEncoded;
 };
 
 interface PolicyBond {
@@ -31,4 +39,10 @@ interface PolicyBond {
   lastAccessedBlock: bigint;
 }
 
-export { ShBundler, GasPriceRequest, GasPriceResult, PolicyBond };
+export {
+  ShBundler,
+  GasPriceRequest,
+  GasPriceResult,
+  GasPriceResultEncoded,
+  PolicyBond,
+};
