@@ -39,6 +39,18 @@ The Fastlane paymaster allows anyone to stake their full MON balance and not hav
 For apps and wallets that want to sponsor gas fees for their users, checkout the script for full details.
 
 ## Demo
+Create a .env file:
+```bash
+RPC_URL=<MONAD_TESTNET_RPC_URL>
+PRIVATE_KEY=<EOA_PRIVATE_KEY>
+ADDRESS_HUB=0xC9f0cDE8316AbC5Efc8C3f5A6b571e815C021B51
+SHBUNDLER_URL=https://monad-testnet.4337-shbundler-fra.fastlane-labs.xyz
+```
+
+install dependencies
+```bash
+npm install
+```
 
 ### Self Sponsored
 ```bash
