@@ -7,6 +7,7 @@ dotenv.config();
 const RPC_URL = process.env.RPC_URL as string;
 const SHBUNDLER_URL = process.env.SHBUNDLER_URL as string;
 const PRIVATE_KEY = process.env.PRIVATE_KEY as Hex;
+const DEPLOYER_PRIVATE_KEY = process.env.DEPLOYER_PRIVATE_KEY as Hex;
 const ADDRESS_HUB = process.env.ADDRESS_HUB as Hex;
 
 const SHMONAD_POINTER = 1;
@@ -23,6 +24,7 @@ const MULTI_SEND_CALL_ONLY_ADDRESS =
   "0x32228dDEA8b9A2bd7f2d71A958fF241D79ca5eEC";
 
 const EOA = privateKeyToAccount(PRIVATE_KEY);
+const DEPLOYER = privateKeyToAccount(DEPLOYER_PRIVATE_KEY);
 
 const CHAIN: Chain = {
   id: Number(CHAIN_ID),
@@ -53,4 +55,6 @@ export {
   SAFE_MODULE_SETUP_ADDRESS,
   MULTI_SEND_ADDRESS,
   MULTI_SEND_CALL_ONLY_ADDRESS,
+  DEPLOYER_PRIVATE_KEY,
+  DEPLOYER,
 };

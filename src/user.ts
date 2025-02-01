@@ -9,6 +9,7 @@ import {
   SAFE_MODULE_SETUP_ADDRESS,
   MULTI_SEND_ADDRESS,
   MULTI_SEND_CALL_ONLY_ADDRESS,
+  DEPLOYER,
 } from "./constants";
 import { toSafeSmartAccount } from "permissionless/accounts";
 import { entryPoint07Address } from "viem/account-abstraction";
@@ -17,6 +18,13 @@ const userClient = createWalletClient({
   chain: CHAIN,
   transport: http(RPC_URL),
   account: EOA,
+});
+
+// deployer client
+const deployerClient = createWalletClient({
+  chain: CHAIN,
+  transport: http(RPC_URL),
+  account: DEPLOYER,
 });
 
 // public client
@@ -42,4 +50,4 @@ const smartAccount = await toSafeSmartAccount({
   multiSendCallOnlyAddress: MULTI_SEND_CALL_ONLY_ADDRESS,
 });
 
-export { userClient, publicClient, smartAccount };
+export { userClient, publicClient, smartAccount, deployerClient };
