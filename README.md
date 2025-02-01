@@ -13,7 +13,7 @@ For apps and wallets, sponsor your users' gas fees and earn yield on your MON ho
 ## Bundler aka shBundler
 shBundler is a fully compliant 4337 bundler that can be easily integrated as an user operation RPC or programmatically with viem or ethers.
 
-RPC: https://dev.4337-shbundler-fra.fastlane-labs.xyz
+RPC: https://monad-testnet.4337-shbundler-fra.fastlane-labs.xyz
 
 Viem Example:
 
@@ -37,3 +37,15 @@ const shBundler = initShBundler(smartAccount, publicClient);
 The Fastlane paymaster allows anyone to stake their full MON balance and not have to worry about needing MON for gas fees. Just deposit your MON for shMON and bond that shMON to the paymaster, then every time you send a 4337 user operation, you can use the Fastlane paymaster address as your paymaster and you can then use your shMON for gas fees. 
 
 For apps and wallets that want to sponsor gas fees for their users, checkout the script for full details.
+
+## Demo
+
+### Self Sponsored
+```bash
+npm run demo:self-sponsored
+```
+
+### With Sponsor
+```bash
+npm run demo:with-sponsor
+```

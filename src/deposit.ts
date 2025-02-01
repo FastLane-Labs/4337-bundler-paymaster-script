@@ -1,83 +1,76 @@
-import { encodeFunctionData, Hex, WalletClient } from "viem";
+import { encodeFunctionData, Hex } from "viem";
+import { publicClient, userClient } from "./user";
 import shmonadAbi from "./abi/shmonad.json";
 import paymasterAbi from "./abi/paymaster.json";
-import { BundlerClient } from "viem/_types/account-abstraction";
+import { ShBundler } from "./types";
 
 async function depositAndBondSmartAccountToShmonad(
-    bundler: BundlerClient, 
-    policyId: bigint, 
-    depositAmount: bigint,
-    shmonad: Hex
+  shBundler: ShBundler,
+  policyId: bigint,
+  depositAmount: bigint,
+  shmonad: Hex
 ) {
-    const data = encodeFunctionData({
-        abi: shmonadAbi,
-        functionName: "depositAndBond",
-        args: [policyId, depositAmount],
-    });
+  const data = encodeFunctionData({
+    abi: shmonadAbi,
+    functionName: "depositAndBond",
+    args: [policyId, depositAmount],
+  });
 
-    const hash = await bundler.sendUserOperation({
-        calls: [
-            {
-                to: shmonad,
-                value: depositAmount,
-                data,
-            }
-        ],
-        maxFeePerGas: 77500000000n,
-        maxPriorityFeePerGas: 2500000000n,
-    })
-
-    console.log("Hash:", hash);
-}
-
-async function depositToEntrypoint(
-    bundler: BundlerClient, 
-    depositAmount: bigint,
-    paymaster: Hex
-) {
-    const depositEntryPointData = encodeFunctionData({
-        abi: paymasterAbi,
-        functionName: "deposit",
-        args: [],
-    });
-
-    const hash = await bundler.sendUserOperation({
-        calls: [
-            {
-                to: paymaster,
-                value: depositAmount,
-                data: depositEntryPointData,
-            }
-        ],
-        maxFeePerGas: 77500000000n,
-        maxPriorityFeePerGas: 2500000000n,
-    })
-
-    console.log("Hash:", hash);
-}    // bond to shmonad if smart account is not bonded
-
-async function depositAndBondEOAToShmonad(
-    client: WalletClient, 
-    policyId: bigint, 
-    depositAmount: bigint,
-    shmonad: Hex
-) {
-    const data = encodeFunctionData({
-        abi: shmonadAbi,
-        functionName: "depositAndBond",
-        args: [policyId, depositAmount],
-    });
-
-    const hash = await client.sendTransaction({
+  const hash = await shBundler.sendUserOperation({
+    calls: [
+      {
         to: shmonad,
         value: depositAmount,
         data,
-        maxFeePerGas: 77500000000n,
-        maxPriorityFeePerGas: 2500000000n,
-    })
+      },
+    ],
+    ...(await shBundler.getUserOperationGasPrice()).slow,
+  });
 
-    console.log("Hash:", hash);
+  console.log("Hash:", hash);
+  await shBundler.waitForUserOperationReceipt({ hash });
 }
 
+async function depositToEntrypoint(depositAmount: bigint, paymaster: Hex) {
+  const data = encodeFunctionData({
+    abi: paymasterAbi,
+    functionName: "deposit",
+    args: [],
+  });
 
-export { depositAndBondSmartAccountToShmonad, depositToEntrypoint, depositAndBondEOAToShmonad };
+  const hash = await userClient.sendTransaction({
+    to: paymaster,
+    value: depositAmount,
+    data,
+  });
+
+  console.log("Hash:", hash);
+  await publicClient.waitForTransactionReceipt({ hash });
+}
+
+async function depositAndBondEOAToShmonad(
+  policyId: bigint,
+  depositAmount: bigint,
+  shmonad: Hex
+) {
+  const data = encodeFunctionData({
+    abi: shmonadAbi,
+    functionName: "depositAndBond",
+    args: [policyId, depositAmount],
+  });
+
+  const hash = await userClient.sendTransaction({
+    to: shmonad,
+    value: depositAmount,
+    data,
+  });
+
+  console.log("Hash:", hash);
+  await publicClient.waitForTransactionReceipt({ hash });
+}
+
+export {
+  depositAndBondSmartAccountToShmonad,
+  depositToEntrypoint,
+  depositAndBondEOAToShmonad,
+};
