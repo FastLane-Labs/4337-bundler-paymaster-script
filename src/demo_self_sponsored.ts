@@ -44,7 +44,7 @@ const shMonadContract = await initContract(
 
 // paymaster policy
 const policyId = (await paymasterContract.read.policyID([])) as bigint;
-const depositAmount = 500000000000000000n;
+const depositAmount = 3000000000000000000n;
 
 // smart account
 const smartAccountBalance = await publicClient.getBalance({
@@ -106,7 +106,6 @@ const userOpHash = await shBundler.sendUserOperation({
   account: smartAccount,
   paymaster: PAYMASTER,
   paymasterData: paymasterMode("user") as Hex,
-  paymasterVerificationGasLimit: 500000n,
   paymasterPostOpGasLimit: 500000n,
   calls: [
     {
