@@ -10,7 +10,7 @@ const PRIVATE_KEY = process.env.PRIVATE_KEY as Hex;
 const ADDRESS_HUB = process.env.ADDRESS_HUB as Hex;
 
 const SHMONAD_POINTER = 1;
-const PAYMASTER_POINTER = 8;
+const PAYMASTER_POINTER = 9;
 const CHAIN_ID = 10143;
 
 //Fastlane deployed safe smart account modules

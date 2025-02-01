@@ -44,7 +44,7 @@ const shMonadContract = await initContract(
 
 // paymaster policy
 const policyId = (await paymasterContract.read.policyID([])) as bigint;
-const depositAmount = 3000000000000000000n;
+const depositAmount = 500000000000000000n;
 
 // smart account
 const smartAccountBalance = await publicClient.getBalance({
@@ -58,15 +58,14 @@ const smartAccountShMonBalance = await shMonadContract.read.balanceOf([
 ]);
 console.log("Smart Account shMON Balance:", smartAccountShMonBalance);
 
-const smartAccountBond = (await shMonadContract.read.getPolicyBond([
+const smartAccountBondedAmount = (await shMonadContract.read.balanceOfBonded([
   policyId,
   smartAccount.address,
-])) as PolicyBond;
-console.log("Smart Account shmonad unbonding", smartAccountBond.unbonding);
-console.log("Smart Account shmonad bonded", smartAccountBond.bonded);
+])) as bigint;
+console.log("Smart Account shmonad bonded", smartAccountBondedAmount);
 
-if (smartAccountBond.bonded < depositAmount) {
-  const amountToBond = depositAmount - smartAccountBond.bonded;
+if (smartAccountBondedAmount < depositAmount) {
+  const amountToBond = depositAmount - smartAccountBondedAmount;
 
   if (smartAccountBalance < amountToBond) {
     const amountToTransfer = amountToBond - smartAccountBalance;
@@ -86,6 +85,7 @@ if (smartAccountBond.bonded < depositAmount) {
   await depositAndBondSmartAccountToShmonad(
     shBundler,
     policyId,
+    smartAccount.address,
     amountToBond,
     SHMONAD
   );
@@ -110,6 +110,7 @@ const userOpHash = await shBundler.sendUserOperation({
   calls: [
     {
       to: userClient.account.address,
+      value: 1000000000000000n
     },
   ],
   ...(await shBundler.getUserOperationGasPrice()).slow,
@@ -121,3 +122,5 @@ const userOpReceipt = await shBundler.waitForUserOperationReceipt({
   hash: userOpHash,
 });
 console.log("User Operation Receipt:", userOpReceipt);
+
+process.exit(0);

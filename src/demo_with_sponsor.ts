@@ -51,17 +51,16 @@ const sponsorBalance = await publicClient.getBalance({
 console.log("sponsor address", userClient.account.address);
 console.log("Sponsor MON Balance:", sponsorBalance);
 
-const sponsorBond = (await shMonadContract.read.getPolicyBond([
+const sponsorBondedAmount = (await shMonadContract.read.balanceOfBonded([
   policyId,
   userClient.account.address,
-])) as PolicyBond;
-console.log("Sponsor shmonad unbonding", sponsorBond.unbonding);
-console.log("Sponsor shmonad bonded", sponsorBond.bonded);
+])) as bigint;
+console.log("Sponsor shmonad bonded", sponsorBondedAmount);
 
-if (sponsorBond.bonded < depositAmount) {
-  const amountToDeposit = depositAmount - sponsorBond.bonded;
+if (sponsorBondedAmount < depositAmount) {
+  const amountToDeposit = depositAmount - sponsorBondedAmount;
   console.log("Depositing and bonding sponsor to shmonad", amountToDeposit);
-  await depositAndBondEOAToShmonad(policyId, amountToDeposit, SHMONAD);
+  await depositAndBondEOAToShmonad(policyId, userClient.account.address, amountToDeposit, SHMONAD);
 }
 
 // paymaster
@@ -80,6 +79,7 @@ const userOperation = await shBundler.prepareUserOperation({
   calls: [
     {
       to: userClient.account.address,
+      value: 1000000000000000n
     },
   ],
   ...(await shBundler.getUserOperationGasPrice()).slow,
