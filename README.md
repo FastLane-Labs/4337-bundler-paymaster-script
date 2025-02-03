@@ -61,3 +61,7 @@ npm run demo:self-sponsored
 ```bash
 npm run demo:with-sponsor
 ```
+## Contact
+Author: Blair Marshall
+Telegram: @marshabl
+Email: blair@fastlane.xyz
