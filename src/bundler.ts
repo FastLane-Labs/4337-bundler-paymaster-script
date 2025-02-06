@@ -5,12 +5,7 @@ import {
   BundlerClient,
   SmartAccount,
 } from "viem/account-abstraction";
-import {
-  ShBundler,
-  GasPriceRequest,
-  GasPriceResult,
-  GasPriceResultEncoded,
-} from "./types";
+import { ShBundler, GasPriceRequest, GasPriceResult } from "./types";
 import { smartAccount, publicClient } from "./user";
 
 function createShBundler(client: BundlerClient): ShBundler {
