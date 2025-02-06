@@ -1,12 +1,11 @@
 import { smartAccount, publicClient, userClient } from "./user";
 import { shBundler } from "./bundler";
-import { PolicyBond } from "./types";
 import { initContract, paymasterMode } from "./contracts";
 import {
   depositAndBondSmartAccountToShmonad,
   depositToEntrypoint,
 } from "./deposit";
-import { ADDRESS_HUB, PAYMASTER_POINTER, SHMONAD_POINTER } from "./constants";
+import { ADDRESS_HUB } from "./constants";
 import addressHubAbi from "./abi/addresshub.json";
 import paymasterAbi from "./abi/paymaster.json";
 import shmonadAbi from "./abi/shmonad.json";
@@ -20,13 +19,8 @@ const addressHubContract = await initContract(
   userClient
 );
 
-const PAYMASTER = (await addressHubContract.read.getAddressFromPointer([
-  BigInt(PAYMASTER_POINTER),
-])) as Hex;
-
-const SHMONAD = (await addressHubContract.read.getAddressFromPointer([
-  BigInt(SHMONAD_POINTER),
-])) as Hex;
+const PAYMASTER = (await addressHubContract.read.paymaster4337([])) as Hex;
+const SHMONAD = (await addressHubContract.read.shMonad([])) as Hex;
 
 const paymasterContract = await initContract(
   PAYMASTER,
@@ -44,7 +38,7 @@ const shMonadContract = await initContract(
 
 // paymaster policy
 const policyId = (await paymasterContract.read.policyID([])) as bigint;
-const depositAmount = 500000000000000000n;
+const depositAmount = 2500000000000000000n;
 
 // smart account
 const smartAccountBalance = await publicClient.getBalance({
@@ -110,7 +104,7 @@ const userOpHash = await shBundler.sendUserOperation({
   calls: [
     {
       to: userClient.account.address,
-      value: 1000000000000000n
+      value: 1000000000000000n,
     },
   ],
   ...(await shBundler.getUserOperationGasPrice()).slow,
