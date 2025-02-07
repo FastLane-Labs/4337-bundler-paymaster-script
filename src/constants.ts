@@ -9,8 +9,6 @@ const SHBUNDLER_URL = process.env.SHBUNDLER_URL as string;
 const PRIVATE_KEY = process.env.PRIVATE_KEY as Hex;
 const ADDRESS_HUB = process.env.ADDRESS_HUB as Hex;
 
-const SHMONAD_POINTER = 1;
-const PAYMASTER_POINTER = 9;
 const CHAIN_ID = 10143;
 
 //Fastlane deployed safe smart account modules
@@ -45,8 +43,6 @@ export {
   SHBUNDLER_URL,
   PRIVATE_KEY,
   ADDRESS_HUB,
-  SHMONAD_POINTER,
-  PAYMASTER_POINTER,
   SAFE4337_MODULE_ADDRESS,
   SAFE_PROXY_FACTORY_ADDRESS,
   SAFE_SINGLETON_ADDRESS,
