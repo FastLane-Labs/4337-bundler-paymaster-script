@@ -42,7 +42,7 @@ const shMonadContract = await initContract(
 
 // paymaster policy
 const policyId = (await paymasterContract.read.policyID([])) as bigint;
-const depositAmount = 500000000000000000n;
+const depositAmount = 2000000000000000000n;
 
 // sponsor
 const sponsorBalance = await publicClient.getBalance({
@@ -69,7 +69,7 @@ console.log("paymaster entrypoint deposit", paymasterDeposit);
 
 if ((paymasterDeposit as bigint) < depositAmount) {
   const amountToDeposit = depositAmount - (paymasterDeposit as bigint);
-  console.log("Depositing to paymaster", amountToDeposit);
+  console.log("Depositing to entrypoint", amountToDeposit);
   await depositToEntrypoint(amountToDeposit, PAYMASTER);
 }
 

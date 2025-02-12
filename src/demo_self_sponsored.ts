@@ -44,7 +44,7 @@ const shMonadContract = await initContract(
 
 // paymaster policy
 const policyId = (await paymasterContract.read.policyID([])) as bigint;
-const depositAmount = 500000000000000000n;
+const depositAmount = 2000000000000000000n;
 
 // smart account
 const smartAccountBalance = await publicClient.getBalance({
@@ -95,8 +95,10 @@ if (smartAccountBondedAmount < depositAmount) {
 const paymasterDeposit = await paymasterContract.read.getDeposit([]);
 console.log("paymaster entrypoint deposit", paymasterDeposit);
 
-if ((paymasterDeposit as bigint) < depositAmount) {
-  const amountToDeposit = depositAmount - (paymasterDeposit as bigint);
+const paymasterDepositAmount = 2000000000000000000n
+
+if ((paymasterDeposit as bigint) < paymasterDepositAmount) {
+  const amountToDeposit = paymasterDepositAmount - (paymasterDeposit as bigint);
   console.log("Depositing to paymaster", amountToDeposit);
   await depositToEntrypoint(amountToDeposit, PAYMASTER);
 }
@@ -107,6 +109,7 @@ const userOpHash = await shBundler.sendUserOperation({
   paymaster: PAYMASTER,
   paymasterData: paymasterMode("user") as Hex,
   paymasterPostOpGasLimit: 500000n,
+  paymasterVerificationGasLimit: 500000n,
   calls: [
     {
       to: userClient.account.address,
