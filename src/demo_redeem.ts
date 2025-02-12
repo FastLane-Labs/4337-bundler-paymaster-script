@@ -112,18 +112,17 @@ if (sponsorShMonBalance > 0n) {
   await withdrawToEOA(sponsorShMonBalance, SHMONAD);
 }
 
-// const paymasterDeposit = await paymasterContract.read.getDeposit([]) as bigint;
-// console.log("paymaster entrypoint deposit", paymasterDeposit);
+const paymasterDeposit = await paymasterContract.read.getDeposit([]) as bigint;
+console.log("paymaster entrypoint deposit", paymasterDeposit);
 
-// const paymasterBond = (await shMonadContract.read.getPolicyBond([
-//     policyId,
-//     PAYMASTER,
-// ])) as PolicyBond;
-// console.log("Paymaster shmonad unbonding", paymasterBond.unbonding);
-// console.log("Paymaster shmonad bonded", paymasterBond.bonded);
+const paymasterBond = (await shMonadContract.read.balanceOfBonded([
+    policyId,
+    PAYMASTER,
+])) as bigint;
+console.log("Paymaster shmonad bonded", paymasterBond);
 
-// // if (paymasterDeposit > 0n) {
-// //   await withdrawToEOA(paymasterDeposit, PAYMASTER);
-// // }
+if (paymasterDeposit > 0n) {
+  await withdrawFromPaymasterToEOA(paymasterDeposit, PAYMASTER);
+}
 
-// process.exit(0);
+process.exit(0);
