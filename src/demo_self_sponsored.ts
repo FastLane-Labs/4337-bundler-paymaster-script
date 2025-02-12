@@ -38,7 +38,8 @@ const shMonadContract = await initContract(
 
 // paymaster policy
 const policyId = (await paymasterContract.read.policyID([])) as bigint;
-const depositAmount = 2500000000000000000n;
+const transferAmount = 2500000000000000000n;
+const bondAmount = 2000000000000000000n;
 
 // smart account
 const smartAccountBalance = await publicClient.getBalance({
@@ -58,16 +59,15 @@ const smartAccountBondedAmount = (await shMonadContract.read.balanceOfBonded([
 ])) as bigint;
 console.log("Smart Account shmonad bonded", smartAccountBondedAmount);
 
-if (smartAccountBondedAmount < depositAmount) {
-  const amountToBond = depositAmount - smartAccountBondedAmount;
+if (smartAccountBondedAmount < transferAmount) {
+  const amountToBond = bondAmount - smartAccountBondedAmount;
 
   if (smartAccountBalance < amountToBond) {
-    const amountToTransfer = amountToBond - smartAccountBalance;
-    console.log("Transferring", amountToTransfer, "to smart account");
+    console.log("Transferring", amountToBond, "to smart account");
 
     const hash = await userClient.sendTransaction({
       to: smartAccount.address,
-      value: amountToTransfer,
+      value: amountToBond,
       gas: 28000n,
     });
 
