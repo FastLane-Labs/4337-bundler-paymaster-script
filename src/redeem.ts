@@ -13,7 +13,7 @@ async function unbondSmartAccountFromShmonad(
   const data = encodeFunctionData({
     abi: shmonadAbi,
     functionName: "unbond",
-    args: [policyId, depositAmount],
+    args: [policyId, depositAmount, 0],
   });
 
   const hash = await shBundler.sendUserOperation({
@@ -130,7 +130,7 @@ async function unbondEOAToShmonad(
   const data = encodeFunctionData({
     abi: shmonadAbi,
     functionName: "unbond",
-    args: [policyId, depositAmount],
+    args: [policyId, depositAmount, 0],
   });
 
   const hash = await userClient.sendTransaction({

@@ -21,13 +21,11 @@ const addressHubContract = await initContract(
   userClient
 );
 
-const PAYMASTER = (await addressHubContract.read.getAddressFromPointer([
-  BigInt(PAYMASTER_POINTER),
-])) as Hex;
+const PAYMASTER = "0xa185fD9B3C1612cAe31CbCc10DA1d29aebe71836" as Hex;
+const SHMONAD = "0x1b4Cb47622705F0F67b6B18bBD1cB1a91fc77d37" as Hex;
 
-const SHMONAD = (await addressHubContract.read.getAddressFromPointer([
-  BigInt(SHMONAD_POINTER),
-])) as Hex;
+// 2991351243700000000n
+// 491074488500000000n
 
 const paymasterContract = await initContract(
   PAYMASTER,
@@ -58,20 +56,23 @@ const smartAccountShMonBalance = await shMonadContract.read.balanceOf([
 ]) as bigint;
 console.log("Smart Account shMON Balance:", smartAccountShMonBalance);
 
-const smartAccountBond = (await shMonadContract.read.getPolicyBond([
+const smartAccountBond = (await shMonadContract.read.balanceOfBonded([
   policyId,
   smartAccount.address,
-])) as PolicyBond;
-console.log("Smart Account shmonad unbonding", smartAccountBond.unbonding);
-console.log("Smart Account shmonad bonded", smartAccountBond.bonded);
+])) as bigint;
+console.log("Smart Account shmonad bonded", smartAccountBond);
+// console.log("Smart Account shmonad unbonding", smartAccountBond.unbonding);
+// console.log("Smart Account shmonad bonded", smartAccountBond.bonded);
 
-if (smartAccountBond.bonded > 0n) {
-  await unbondSmartAccountFromShmonad(shBundler,policyId, smartAccountBond.bonded, SHMONAD);
+// const smartAccountUnbonding = 2991351243700000000n
+
+if (smartAccountBond > 0n) {
+  await unbondSmartAccountFromShmonad(shBundler, policyId, smartAccountBond, SHMONAD);
 }
 
-if (smartAccountBond.unbonding > 0n) {
-    await redeemToSmartAccount(shBundler,policyId, smartAccountBond.unbonding, SHMONAD);
-  }
+// if (smartAccountUnbonding > 0n) {
+//     await redeemToSmartAccount(shBundler, policyId, smartAccountUnbonding, SHMONAD);
+//   }
 
 if (smartAccountShMonBalance > 0n) {
   await withdrawToSmartAccount(shBundler, smartAccountShMonBalance, SHMONAD);
@@ -91,37 +92,38 @@ const sponsorShMonBalance = await shMonadContract.read.balanceOf([
 ]) as bigint;
 console.log("Sponsor shMON Balance:", sponsorShMonBalance);
 
-const sponsorBond = (await shMonadContract.read.getPolicyBond([
+const sponsorBond = (await shMonadContract.read.balanceOfBonded([
     policyId,
     userClient.account.address,
-])) as PolicyBond;
-console.log("Sponsor shmonad unbonding", sponsorBond.unbonding);
-console.log("Sponsor shmonad bonded", sponsorBond.bonded);
+])) as bigint;
+console.log("Sponsor shmonad bonded", sponsorBond);
 
-if (sponsorBond.bonded > 0n) {
-  await unbondEOAToShmonad(policyId, sponsorBond.bonded, SHMONAD);
+// const sponsorUnbonding = 491074488500000000n
+
+if (sponsorBond > 0n) {
+  await unbondEOAToShmonad(policyId, sponsorBond, SHMONAD);
 }
 
-if (sponsorBond.unbonding > 0n) {
-    await redeemToEOA(policyId, sponsorBond.unbonding, SHMONAD);
-  }
+// if (sponsorUnbonding > 0n) {
+//     await redeemToEOA(policyId, sponsorUnbonding, SHMONAD);
+//   }
 
 if (sponsorShMonBalance > 0n) {
   await withdrawToEOA(sponsorShMonBalance, SHMONAD);
 }
 
-const paymasterDeposit = await paymasterContract.read.getDeposit([]) as bigint;
-console.log("paymaster entrypoint deposit", paymasterDeposit);
+// const paymasterDeposit = await paymasterContract.read.getDeposit([]) as bigint;
+// console.log("paymaster entrypoint deposit", paymasterDeposit);
 
-const paymasterBond = (await shMonadContract.read.getPolicyBond([
-    policyId,
-    PAYMASTER,
-])) as PolicyBond;
-console.log("Paymaster shmonad unbonding", paymasterBond.unbonding);
-console.log("Paymaster shmonad bonded", paymasterBond.bonded);
+// const paymasterBond = (await shMonadContract.read.getPolicyBond([
+//     policyId,
+//     PAYMASTER,
+// ])) as PolicyBond;
+// console.log("Paymaster shmonad unbonding", paymasterBond.unbonding);
+// console.log("Paymaster shmonad bonded", paymasterBond.bonded);
 
-// if (paymasterDeposit > 0n) {
-//   await withdrawToEOA(paymasterDeposit, PAYMASTER);
-// }
+// // if (paymasterDeposit > 0n) {
+// //   await withdrawToEOA(paymasterDeposit, PAYMASTER);
+// // }
 
-process.exit(0);
+// process.exit(0);
