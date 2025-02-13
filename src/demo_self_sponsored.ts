@@ -59,22 +59,22 @@ const smartAccountBondedAmount = (await shMonadContract.read.balanceOfBonded([
 ])) as bigint;
 console.log("Smart Account shmonad bonded", smartAccountBondedAmount);
 
-if (smartAccountBondedAmount < transferAmount) {
+if (smartAccountBalance < transferAmount) {
+  const amountToTransfer = transferAmount - smartAccountBalance;
+  console.log("Transferring", amountToTransfer, "to smart account");
+
+  const hash = await userClient.sendTransaction({
+    to: smartAccount.address,
+    value: amountToTransfer,
+    gas: 28000n,
+  });
+
+  console.log("Hash:", hash);
+  await publicClient.waitForTransactionReceipt({ hash });
+}
+
+if (smartAccountBondedAmount < bondAmount) {
   const amountToBond = bondAmount - smartAccountBondedAmount;
-
-  if (smartAccountBalance < amountToBond) {
-    console.log("Transferring", amountToBond, "to smart account");
-
-    const hash = await userClient.sendTransaction({
-      to: smartAccount.address,
-      value: amountToBond,
-      gas: 28000n,
-    });
-
-    console.log("Hash:", hash);
-    await publicClient.waitForTransactionReceipt({ hash });
-  }
-
   console.log("Depositing and bonding smart account to shmonad", amountToBond);
   await depositAndBondSmartAccountToShmonad(
     shBundler,
