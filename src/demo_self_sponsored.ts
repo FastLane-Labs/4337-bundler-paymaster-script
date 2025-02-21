@@ -37,7 +37,7 @@ const shMonadContract = await initContract(
 );
 
 // paymaster policy
-const policyId = (await paymasterContract.read.policyID([])) as bigint;
+const policyId = (await paymasterContract.read.POLICY_ID([])) as bigint;
 const transferAmount = 3400000000000000000n;
 const bondAmount = 3000000000000000000n;
 
@@ -74,13 +74,20 @@ if (smartAccountBalance < transferAmount) {
 }
 
 if (smartAccountBondedAmount < bondAmount) {
-  const amountToBond = bondAmount - smartAccountBondedAmount;
-  console.log("Depositing and bonding smart account to shmonad", amountToBond);
+  const amountToDeposit = bondAmount - smartAccountBondedAmount;
+
+  const shMONToBond = (await shMonadContract.read.previewDeposit([
+    amountToDeposit,
+  ])) as bigint;
+
+  console.log("Depositing and bonding smart account to shmonad", shMONToBond);
+
   await depositAndBondSmartAccountToShmonad(
     shBundler,
     policyId,
     smartAccount.address,
-    amountToBond,
+    shMONToBond,
+    amountToDeposit,
     SHMONAD
   );
 }
@@ -89,7 +96,7 @@ if (smartAccountBondedAmount < bondAmount) {
 const paymasterDeposit = await paymasterContract.read.getDeposit([]);
 console.log("paymaster entrypoint deposit", paymasterDeposit);
 
-const paymasterDepositAmount = 2000000000000000000n
+const paymasterDepositAmount = 9990000000000000000n
 
 if ((paymasterDeposit as bigint) < paymasterDepositAmount) {
   const amountToDeposit = paymasterDepositAmount - (paymasterDeposit as bigint);

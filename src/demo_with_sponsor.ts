@@ -35,7 +35,7 @@ const shMonadContract = await initContract(
 );
 
 // paymaster policy
-const policyId = (await paymasterContract.read.policyID([])) as bigint;
+const policyId = (await paymasterContract.read.POLICY_ID([])) as bigint;
 const depositAmount = 2500000000000000000n;
 
 // sponsor
@@ -53,10 +53,16 @@ console.log("Sponsor shmonad bonded", sponsorBondedAmount);
 
 if (sponsorBondedAmount < depositAmount) {
   const amountToDeposit = depositAmount - sponsorBondedAmount;
-  console.log("Depositing and bonding sponsor to shmonad", amountToDeposit);
+
+  const shMONToBond = (await shMonadContract.read.previewDeposit([
+    amountToDeposit,
+  ])) as bigint;
+  console.log("Depositing and bonding sponsor to shmonad", shMONToBond);
+  
   await depositAndBondEOAToShmonad(
     policyId,
     userClient.account.address,
+    shMONToBond,
     amountToDeposit,
     SHMONAD
   );

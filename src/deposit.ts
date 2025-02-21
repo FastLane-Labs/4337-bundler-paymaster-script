@@ -8,20 +8,22 @@ async function depositAndBondSmartAccountToShmonad(
   shBundler: ShBundler,
   policyId: bigint,
   bondRecipient: Hex,
-  depositAmount: bigint,
+  shMonToBond: bigint,
+  monToDeposit: bigint,
   shmonad: Hex
 ) {
+  
   const data = encodeFunctionData({
     abi: shmonadAbi,
     functionName: "depositAndBond",
-    args: [policyId, bondRecipient, depositAmount],
+    args: [policyId, bondRecipient, shMonToBond],
   });
 
   const hash = await shBundler.sendUserOperation({
     calls: [
       {
         to: shmonad,
-        value: depositAmount,
+        value: monToDeposit,
         data,
       },
     ],
@@ -52,18 +54,19 @@ async function depositToEntrypoint(depositAmount: bigint, paymaster: Hex) {
 async function depositAndBondEOAToShmonad(
   policyId: bigint,
   bondRecipient: Hex,
-  depositAmount: bigint,
+  shMonToBond: bigint,
+  monToDeposit: bigint,
   shmonad: Hex
 ) {
   const data = encodeFunctionData({
     abi: shmonadAbi,
     functionName: "depositAndBond",
-    args: [policyId, bondRecipient, depositAmount],
+    args: [policyId, bondRecipient, shMonToBond],
   });
 
   const hash = await userClient.sendTransaction({
     to: shmonad,
-    value: depositAmount,
+    value: monToDeposit,
     data,
   });
 
