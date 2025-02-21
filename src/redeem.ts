@@ -1,5 +1,5 @@
 import { encodeFunctionData, Hex } from "viem";
-import { deployerClient, publicClient, userClient } from "./user";
+import { deployerClient, publicClient, smartAccount, userClient } from "./user";
 import shmonadAbi from "./abi/shmonad.json";
 import paymasterAbi from "./abi/paymaster.json";
 import { ShBundler } from "./types";
@@ -31,7 +31,7 @@ async function unbondSmartAccountFromShmonad(
   await shBundler.waitForUserOperationReceipt({ hash });
 }
 
-async function redeemToSmartAccount(
+async function claimToSmartAccount(
   shBundler: ShBundler,
   policyId: bigint,
   withdrawAmount: bigint,
@@ -39,7 +39,7 @@ async function redeemToSmartAccount(
 ) {
   const data = encodeFunctionData({
     abi: shmonadAbi,
-    functionName: "redeem",
+    functionName: "claim",
     args: [policyId, withdrawAmount],
   });
 
@@ -66,7 +66,7 @@ async function withdrawToSmartAccount(
   const data = encodeFunctionData({
     abi: shmonadAbi,
     functionName: "withdraw",
-    args: [withdrawAmount],
+    args: [withdrawAmount, smartAccount.address, smartAccount.address],
   });
 
   const hash = await shBundler.sendUserOperation({
@@ -143,14 +143,14 @@ async function unbondEOAToShmonad(
   await publicClient.waitForTransactionReceipt({ hash });
 }
 
-async function redeemToEOA(
+async function claimToEOA(
   policyId: bigint,
   withdrawAmount: bigint,
   shmonad: Hex
 ) {
   const data = encodeFunctionData({
     abi: shmonadAbi,
-    functionName: "redeem",
+    functionName: "claim",
     args: [policyId, withdrawAmount],
   });
 
@@ -171,7 +171,7 @@ async function withdrawToEOA(
   const data = encodeFunctionData({
     abi: shmonadAbi,
     functionName: "withdraw",
-    args: [withdrawAmount],
+    args: [withdrawAmount, userClient.account.address, userClient.account.address],
   });
 
   const hash = await userClient.sendTransaction({
@@ -188,9 +188,9 @@ export {
   unbondSmartAccountFromShmonad,
   withdrawToEOA,
   unbondEOAToShmonad,
-  redeemToEOA,
+  claimToEOA,
   withdrawFromPaymasterToEOA,
-  redeemToSmartAccount,
+  claimToSmartAccount,
   withdrawToSmartAccount,
   transfer,
 };

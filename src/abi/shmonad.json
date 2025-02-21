@@ -393,7 +393,7 @@
   },
   {
     "type": "function",
-    "name": "redeem",
+    "name": "claim",
     "inputs": [
       {
         "name": "policyID",
@@ -411,7 +411,7 @@
   },
   {
     "type": "function",
-    "name": "redeemAndRebond",
+    "name": "claimAndRebond",
     "inputs": [
       {
         "name": "fromPolicyID",
@@ -439,7 +439,7 @@
   },
   {
     "type": "function",
-    "name": "redeemAndWithdraw",
+    "name": "claimAndWithdraw",
     "inputs": [
       {
         "name": "policyID",
@@ -1531,7 +1531,7 @@
   },
   {
     "type": "event",
-    "name": "Redeem",
+    "name": "Claim",
     "inputs": [
       {
         "name": "policyID",

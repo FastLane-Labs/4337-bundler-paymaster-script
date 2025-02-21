@@ -1,17 +1,12 @@
 import { smartAccount, publicClient, userClient } from "./user";
 import { shBundler } from "./bundler";
-import { PolicyBond } from "./types";
-import { initContract, paymasterMode } from "./contracts";
-import {
-  depositAndBondSmartAccountToShmonad,
-  depositToEntrypoint,
-} from "./deposit";
+import { initContract } from "./contracts";
 import { ADDRESS_HUB, PAYMASTER_POINTER, SHMONAD_POINTER } from "./constants";
 import addressHubAbi from "./abi/addresshub.json";
 import paymasterAbi from "./abi/paymaster.json";
 import shmonadAbi from "./abi/shmonad.json";
 import { Hex } from "viem";
-import { unbondEOAToShmonad, withdrawToEOA, unbondSmartAccountFromShmonad, transfer, redeemToSmartAccount, withdrawToSmartAccount, redeemToEOA, withdrawFromPaymasterToEOA } from "./redeem";
+import { unbondEOAToShmonad, withdrawToEOA, unbondSmartAccountFromShmonad, transfer, claimToSmartAccount, withdrawToSmartAccount, claimToEOA, withdrawFromPaymasterToEOA } from "./redeem";
 
 // initialize contracts and get addresses
 const addressHubContract = await initContract(
@@ -21,11 +16,15 @@ const addressHubContract = await initContract(
   userClient
 );
 
-const PAYMASTER = "0xa185fD9B3C1612cAe31CbCc10DA1d29aebe71836" as Hex;
-const SHMONAD = "0x1b4Cb47622705F0F67b6B18bBD1cB1a91fc77d37" as Hex;
+const PAYMASTER = (await addressHubContract.read.getAddressFromPointer([
+  BigInt(PAYMASTER_POINTER),
+])) as Hex;
+console.log("PAYMASTER", PAYMASTER);
 
-// 2991351243700000000n
-// 491074488500000000n
+const SHMONAD = (await addressHubContract.read.getAddressFromPointer([
+  BigInt(SHMONAD_POINTER),
+])) as Hex;
+console.log("SHMONAD", SHMONAD);
 
 const paymasterContract = await initContract(
   PAYMASTER,
@@ -60,19 +59,22 @@ const smartAccountBond = (await shMonadContract.read.balanceOfBonded([
   policyId,
   smartAccount.address,
 ])) as bigint;
-console.log("Smart Account shmonad bonded", smartAccountBond);
-// console.log("Smart Account shmonad unbonding", smartAccountBond.unbonding);
-// console.log("Smart Account shmonad bonded", smartAccountBond.bonded);
 
-// const smartAccountUnbonding = 2991351243700000000n
+const smartAccountUnbonding = (await shMonadContract.read.balanceOfUnbonding([
+  policyId,
+  smartAccount.address,
+])) as bigint;
+console.log("Smart Account shmonad bonded", smartAccountBond);
+console.log("Smart Account shmonad unbonding", smartAccountUnbonding);
+
 
 if (smartAccountBond > 0n) {
   await unbondSmartAccountFromShmonad(shBundler, policyId, smartAccountBond, SHMONAD);
 }
 
-// if (smartAccountUnbonding > 0n) {
-//     await redeemToSmartAccount(shBundler, policyId, smartAccountUnbonding, SHMONAD);
-//   }
+if (smartAccountUnbonding > 0n) {
+    await claimToSmartAccount(shBundler, policyId, smartAccountUnbonding, SHMONAD);
+  }
 
 if (smartAccountShMonBalance > 0n) {
   await withdrawToSmartAccount(shBundler, smartAccountShMonBalance, SHMONAD);
@@ -96,17 +98,21 @@ const sponsorBond = (await shMonadContract.read.balanceOfBonded([
     policyId,
     userClient.account.address,
 ])) as bigint;
-console.log("Sponsor shmonad bonded", sponsorBond);
 
-// const sponsorUnbonding = 491074488500000000n
+const sponsorUnbonding = (await shMonadContract.read.balanceOfUnbonding([
+  policyId,
+  userClient.account.address,
+])) as bigint;
+console.log("Sponsor shmonad bonded", sponsorBond);
+console.log("Sponsor shmonad unbonding", sponsorUnbonding);
 
 if (sponsorBond > 0n) {
   await unbondEOAToShmonad(policyId, sponsorBond, SHMONAD);
 }
 
-// if (sponsorUnbonding > 0n) {
-//     await redeemToEOA(policyId, sponsorUnbonding, SHMONAD);
-//   }
+if (sponsorUnbonding > 0n) {
+    await claimToEOA(policyId, sponsorUnbonding, SHMONAD);
+  }
 
 if (sponsorShMonBalance > 0n) {
   await withdrawToEOA(sponsorShMonBalance, SHMONAD);
