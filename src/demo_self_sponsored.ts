@@ -38,8 +38,8 @@ const shMonadContract = await initContract(
 
 // paymaster policy
 const policyId = (await paymasterContract.read.policyID([])) as bigint;
-const transferAmount = 2500000000000000000n;
-const bondAmount = 2000000000000000000n;
+const transferAmount = 3400000000000000000n;
+const bondAmount = 3000000000000000000n;
 
 // smart account
 const smartAccountBalance = await publicClient.getBalance({
