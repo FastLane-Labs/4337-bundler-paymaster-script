@@ -58,7 +58,7 @@ if (sponsorBondedAmount < depositAmount) {
     amountToDeposit,
   ])) as bigint;
   console.log("Depositing and bonding sponsor to shmonad", shMONToBond);
-  
+
   await depositAndBondEOAToShmonad(
     policyId,
     userClient.account.address,
@@ -83,7 +83,7 @@ const userOperation = await shBundler.prepareUserOperation({
   account: smartAccount,
   calls: [
     {
-      to: userClient.account.address,
+      to: smartAccount.address,
       value: 1000000000000000n,
     },
   ],
@@ -112,8 +112,8 @@ userOperation.paymasterData = paymasterMode(
 ) as Hex;
 
 userOperation.paymaster = PAYMASTER;
-userOperation.paymasterVerificationGasLimit = 500000n;
-userOperation.paymasterPostOpGasLimit = 500000n;
+userOperation.paymasterVerificationGasLimit = 75000n;
+userOperation.paymasterPostOpGasLimit = 120000n;
 
 const signature = await smartAccount.signUserOperation(userOperation);
 userOperation.signature = signature as Hex;
