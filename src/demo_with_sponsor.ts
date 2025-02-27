@@ -2,13 +2,13 @@ import { smartAccount, publicClient, userClient } from "./user";
 import { shBundler } from "./bundler";
 import { initContract, paymasterMode } from "./contracts";
 import { depositAndBondEOAToShmonad, depositToEntrypoint } from "./deposit";
-import { ADDRESS_HUB } from "./constants";
+import { ADDRESS_HUB, CHAIN_ID, SAFE4337_MODULE_ADDRESS } from "./constants";
 import addressHubAbi from "./abi/addresshub.json";
 import paymasterAbi from "./abi/paymaster.json";
 import shmonadAbi from "./abi/shmonad.json";
 import { Hex } from "viem";
 import { toPackedUserOperation } from "viem/account-abstraction";
-
+import { signUserOperation } from "./utils";
 // initialize contracts and get addresses
 const addressHubContract = await initContract(
   ADDRESS_HUB,
@@ -112,18 +112,22 @@ userOperation.paymasterData = paymasterMode(
 ) as Hex;
 
 userOperation.paymaster = PAYMASTER;
-userOperation.paymasterVerificationGasLimit = 500000n;
-userOperation.paymasterPostOpGasLimit = 500000n;
+userOperation.paymasterVerificationGasLimit = 50000n;
+userOperation.paymasterPostOpGasLimit = 120000n;
+
+const safeSignature = await signUserOperation(userOperation, userClient, CHAIN_ID, SAFE4337_MODULE_ADDRESS)
+console.log("Safe Signature:", safeSignature);
 
 const signature = await smartAccount.signUserOperation(userOperation);
 userOperation.signature = signature as Hex;
+console.log("Signature:", signature);
 
-const userOpHash = await shBundler.sendUserOperation(userOperation);
-console.log("User Operation Hash:", userOpHash);
+// const userOpHash = await shBundler.sendUserOperation(userOperation);
+// console.log("User Operation Hash:", userOpHash);
 
-const userOpReceipt = await shBundler.waitForUserOperationReceipt({
-  hash: userOpHash,
-});
-console.log("User Operation Receipt:", userOpReceipt);
+// const userOpReceipt = await shBundler.waitForUserOperationReceipt({
+//   hash: userOpHash,
+// });
+// console.log("User Operation Receipt:", userOpReceipt);
 
-process.exit(0);
+// process.exit(0);

@@ -37,6 +37,7 @@ const CHAIN: Chain = {
 };
 
 export {
+  CHAIN_ID,
   EOA,
   CHAIN,
   RPC_URL,
