@@ -122,12 +122,12 @@ const signature = await smartAccount.signUserOperation(userOperation);
 userOperation.signature = signature as Hex;
 console.log("Signature:", signature);
 
-// const userOpHash = await shBundler.sendUserOperation(userOperation);
-// console.log("User Operation Hash:", userOpHash);
+const userOpHash = await shBundler.sendUserOperation(userOperation);
+console.log("User Operation Hash:", userOpHash);
 
-// const userOpReceipt = await shBundler.waitForUserOperationReceipt({
-//   hash: userOpHash,
-// });
-// console.log("User Operation Receipt:", userOpReceipt);
+const userOpReceipt = await shBundler.waitForUserOperationReceipt({
+  hash: userOpHash,
+});
+console.log("User Operation Receipt:", userOpReceipt);
 
-// process.exit(0);
+process.exit(0);
