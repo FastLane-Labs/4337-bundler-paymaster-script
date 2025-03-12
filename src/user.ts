@@ -12,6 +12,7 @@ import {
 } from "./constants";
 import { toSafeSmartAccount } from "permissionless/accounts";
 import { entryPoint07Address } from "viem/account-abstraction";
+import { createPaymasterClient } from "viem/account-abstraction";
 // user client
 const userClient = createWalletClient({
   chain: CHAIN,
@@ -23,6 +24,11 @@ const userClient = createWalletClient({
 const publicClient = createPublicClient({
   transport: http(RPC_URL),
   chain: CHAIN,
+});
+
+// paymaster client
+const paymasterClient = createPaymasterClient({
+  transport: http(),
 });
 
 // smart wallet
@@ -42,4 +48,4 @@ const smartAccount = await toSafeSmartAccount({
   multiSendCallOnlyAddress: MULTI_SEND_CALL_ONLY_ADDRESS,
 });
 
-export { userClient, publicClient, smartAccount };
+export { userClient, publicClient, smartAccount, paymasterClient };

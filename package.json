@@ -1,5 +1,6 @@
 {
   "devDependencies": {
+    "@types/express": "^5.0.0",
     "dotenv": "^16.4.7",
     "permissionless": "^0.2.21",
     "typescript": "^5.7.2",
@@ -8,7 +9,12 @@
   "scripts": {
     "demo:self-sponsored": "tsx ./src/demo_self_sponsored.ts",
     "demo:with-sponsor": "tsx ./src/demo_with_sponsor.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "dev": "tsx src/paymaster.ts"
   },
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "express": "^4.21.2",
+    "next": "^15.2.2"
+  }
 }

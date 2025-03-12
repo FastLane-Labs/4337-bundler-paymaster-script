@@ -1,5 +1,5 @@
-import { smartAccount, publicClient, userClient } from "./user";
-import { shBundler } from "./bundler";
+import { smartAccount, publicClient, userClient, paymasterClient } from "./user";
+import { initShBundler } from "./bundler";
 import { initContract, paymasterMode } from "./contracts";
 import {
   depositAndBondSmartAccountToShmonad,
@@ -10,6 +10,8 @@ import addressHubAbi from "./abi/addresshub.json";
 import paymasterAbi from "./abi/paymaster.json";
 import shmonadAbi from "./abi/shmonad.json";
 import { Hex } from "viem";
+
+const shBundler = initShBundler(smartAccount, publicClient, paymasterClient, "user");
 
 // initialize contracts and get addresses
 const addressHubContract = await initContract(
@@ -107,10 +109,6 @@ if ((paymasterDeposit as bigint) < paymasterDepositAmount) {
 // send user operation with shBundler
 const userOpHash = await shBundler.sendUserOperation({
   account: smartAccount,
-  paymaster: PAYMASTER,
-  paymasterData: paymasterMode("user") as Hex,
-  paymasterPostOpGasLimit: 500000n,
-  paymasterVerificationGasLimit: 500000n,
   calls: [
     {
       to: userClient.account.address,

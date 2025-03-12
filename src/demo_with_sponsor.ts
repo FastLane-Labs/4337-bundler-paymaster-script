@@ -1,14 +1,15 @@
-import { smartAccount, publicClient, userClient } from "./user";
-import { shBundler } from "./bundler";
-import { initContract, paymasterMode } from "./contracts";
-import { depositAndBondEOAToShmonad, depositToEntrypoint } from "./deposit";
-import { ADDRESS_HUB, CHAIN_ID, SAFE4337_MODULE_ADDRESS } from "./constants";
+import { smartAccount, publicClient, userClient, paymasterClient } from "./user";
+import { initContract } from "./contracts";
+import { depositAndBondEOAToShmonad } from "./deposit";
+import { ADDRESS_HUB } from "./constants";
 import addressHubAbi from "./abi/addresshub.json";
 import paymasterAbi from "./abi/paymaster.json";
 import shmonadAbi from "./abi/shmonad.json";
 import { Hex } from "viem";
-import { toPackedUserOperation } from "viem/account-abstraction";
-import { signUserOperation } from "./utils";
+import { initShBundler } from "./bundler";
+
+const shBundler = initShBundler(smartAccount, publicClient, paymasterClient, "sponsor");
+
 // initialize contracts and get addresses
 const addressHubContract = await initContract(
   ADDRESS_HUB,
@@ -72,14 +73,7 @@ if (sponsorBondedAmount < depositAmount) {
 const paymasterDeposit = await paymasterContract.read.getDeposit([]);
 console.log("paymaster entrypoint deposit", paymasterDeposit);
 
-if ((paymasterDeposit as bigint) < depositAmount) {
-  const amountToDeposit = depositAmount - (paymasterDeposit as bigint);
-  console.log("Depositing to entrypoint", amountToDeposit);
-  await depositToEntrypoint(amountToDeposit, PAYMASTER);
-}
-
-// send user operation with shBundler
-const userOperation = await shBundler.prepareUserOperation({
+const userOpHash = await shBundler.sendUserOperation({
   account: smartAccount,
   calls: [
     {
@@ -90,39 +84,6 @@ const userOperation = await shBundler.prepareUserOperation({
   ...(await shBundler.getUserOperationGasPrice()).slow,
 });
 
-const validAfter = 0n;
-const validUntil = BigInt(Date.now() + 1000 * 60 * 60 * 24) + BigInt(100);
-
-const hash = await paymasterContract.read.getHash([
-  toPackedUserOperation(userOperation),
-  validUntil,
-  validAfter,
-]);
-
-const sponsorSignature = await userClient.signMessage({
-  message: { raw: hash as Hex },
-});
-
-userOperation.paymasterData = paymasterMode(
-  "sponsor",
-  validUntil,
-  validAfter,
-  sponsorSignature,
-  userClient
-) as Hex;
-
-userOperation.paymaster = PAYMASTER;
-userOperation.paymasterVerificationGasLimit = 50000n;
-userOperation.paymasterPostOpGasLimit = 120000n;
-
-const safeSignature = await signUserOperation(userOperation, userClient, CHAIN_ID, SAFE4337_MODULE_ADDRESS)
-console.log("Safe Signature:", safeSignature);
-
-const signature = await smartAccount.signUserOperation(userOperation);
-userOperation.signature = signature as Hex;
-console.log("Signature:", signature);
-
-const userOpHash = await shBundler.sendUserOperation(userOperation);
 console.log("User Operation Hash:", userOpHash);
 
 const userOpReceipt = await shBundler.waitForUserOperationReceipt({
