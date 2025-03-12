@@ -98,14 +98,6 @@ if (smartAccountBondedAmount < bondAmount) {
 const paymasterDeposit = await paymasterContract.read.getDeposit([]);
 console.log("paymaster entrypoint deposit", paymasterDeposit);
 
-const paymasterDepositAmount = 9990000000000000000n
-
-if ((paymasterDeposit as bigint) < paymasterDepositAmount) {
-  const amountToDeposit = paymasterDepositAmount - (paymasterDeposit as bigint);
-  console.log("Depositing to paymaster", amountToDeposit);
-  await depositToEntrypoint(amountToDeposit, PAYMASTER);
-}
-
 // send user operation with shBundler
 const userOpHash = await shBundler.sendUserOperation({
   account: smartAccount,

@@ -422,7 +422,7 @@ async function handlePaymasterWithoutSponsor(id: any, res: Response, payorAddres
         jsonrpc: '2.0',
         id,
         result: {
-          paymaster: getPaymasterAddress(),
+          paymaster: await getPaymasterAddress(),
           paymasterData: paymasterMode('user'),
           sponsor: {
             name: 'Fastlane Paymaster'
