@@ -8,6 +8,7 @@ import paymasterAbi from './abi/paymaster.json';
 import addressHubAbi from './abi/addresshub.json';
 import shmonadAbi from './abi/shmonad.json';
 import { monadTestnet } from 'viem/chains';
+import corsMiddleware from 'cors';
 // Use a backend-specific RPC URL (not prefixed with NEXT_PUBLIC_)
 const BACKEND_RPC_URL = process.env.RPC_URL;
 const MIN_BONDED_BALANCE = 100000000000000000n;
@@ -39,6 +40,13 @@ const sponsorWallet = sponsorAccount
 
 // Add Express app setup at the top level:
 const app = express();
+
+// Add these lines before other middleware
+app.use(corsMiddleware({
+  origin: '*', // Be more restrictive in production
+  methods: ['POST'],
+  allowedHeaders: ['Content-Type']
+}));
 app.use(express.json());
 
 /**

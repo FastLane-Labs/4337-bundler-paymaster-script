@@ -9,6 +9,7 @@ import {
   SAFE_MODULE_SETUP_ADDRESS,
   MULTI_SEND_ADDRESS,
   MULTI_SEND_CALL_ONLY_ADDRESS,
+  PAYMASTER_URL,
 } from "./constants";
 import { toSafeSmartAccount } from "permissionless/accounts";
 import { entryPoint07Address } from "viem/account-abstraction";
@@ -28,7 +29,7 @@ const publicClient = createPublicClient({
 
 // paymaster client
 const paymasterClient = createPaymasterClient({
-  transport: http(),
+  transport: http(PAYMASTER_URL),
 });
 
 // smart wallet

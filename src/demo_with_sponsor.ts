@@ -52,22 +52,22 @@ const sponsorBondedAmount = (await shMonadContract.read.balanceOfBonded([
 ])) as bigint;
 console.log("Sponsor shmonad bonded", sponsorBondedAmount);
 
-if (sponsorBondedAmount < depositAmount) {
-  const amountToDeposit = depositAmount - sponsorBondedAmount;
+// if (sponsorBondedAmount < depositAmount) {
+//   const amountToDeposit = depositAmount - sponsorBondedAmount;
 
-  const shMONToBond = (await shMonadContract.read.previewDeposit([
-    amountToDeposit,
-  ])) as bigint;
-  console.log("Depositing and bonding sponsor to shmonad", shMONToBond);
+//   const shMONToBond = (await shMonadContract.read.previewDeposit([
+//     amountToDeposit,
+//   ])) as bigint;
+//   console.log("Depositing and bonding sponsor to shmonad", shMONToBond);
   
-  await depositAndBondEOAToShmonad(
-    policyId,
-    userClient.account.address,
-    shMONToBond,
-    amountToDeposit,
-    SHMONAD
-  );
-}
+//   await depositAndBondEOAToShmonad(
+//     policyId,
+//     userClient.account.address,
+//     shMONToBond,
+//     amountToDeposit,
+//     SHMONAD
+//   );
+// }
 
 // paymaster
 const paymasterDeposit = await paymasterContract.read.getDeposit([]);
