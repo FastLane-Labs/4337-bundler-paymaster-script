@@ -1,15 +1,22 @@
 {
   "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
     "dotenv": "^16.4.7",
     "permissionless": "^0.2.21",
-    "tsx": "^4.19.2",
     "typescript": "^5.7.2",
     "viem": "^2.21.54"
   },
   "scripts": {
     "demo:self-sponsored": "tsx ./src/demo_self_sponsored.ts",
     "demo:with-sponsor": "tsx ./src/demo_with_sponsor.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "dev": "tsx src/paymaster.ts"
   },
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "next": "^15.2.2"
+  }
 }

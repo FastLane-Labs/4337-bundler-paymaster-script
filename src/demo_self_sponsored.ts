@@ -1,5 +1,5 @@
-import { smartAccount, publicClient, userClient } from "./user";
-import { shBundler } from "./bundler";
+import { smartAccount, publicClient, userClient, paymasterClient } from "./user";
+import { initShBundler } from "./bundler";
 import { initContract, paymasterMode } from "./contracts";
 import { depositAndBondEOAToShmonad, depositToEntrypoint } from "./deposit";
 import { ADDRESS_HUB } from "./constants";
@@ -7,6 +7,8 @@ import addressHubAbi from "./abi/addresshub.json";
 import paymasterAbi from "./abi/paymaster.json";
 import shmonadAbi from "./abi/shmonad.json";
 import { Hex } from "viem";
+
+const shBundler = initShBundler(smartAccount, publicClient, paymasterClient, "user");
 
 // initialize contracts and get addresses
 const addressHubContract = await initContract(
@@ -78,22 +80,12 @@ if (smartAccountBondedAmount < bondAmount) {
 const paymasterDeposit = await paymasterContract.read.getDeposit([]);
 console.log("paymaster entrypoint deposit", paymasterDeposit);
 
-const paymasterDepositAmount = 5000000000000000000n;
-
-if ((paymasterDeposit as bigint) < paymasterDepositAmount) {
-  const amountToDeposit = paymasterDepositAmount - (paymasterDeposit as bigint);
-  console.log("Depositing to paymaster", amountToDeposit);
-  await depositToEntrypoint(amountToDeposit, PAYMASTER);
-}
-
 // send user operation with shBundler
 const userOpHash = await shBundler.sendUserOperation({
   account: smartAccount,
-  paymaster: PAYMASTER,
-  paymasterData: paymasterMode("user") as Hex,
   calls: [
     {
-      to: smartAccount.address,
+      to: userClient.account.address,
       value: 1000000000000000n,
     },
   ],

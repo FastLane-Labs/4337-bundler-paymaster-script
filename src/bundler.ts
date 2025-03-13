@@ -4,9 +4,9 @@ import {
   createBundlerClient,
   BundlerClient,
   SmartAccount,
+  PaymasterClient,
 } from "viem/account-abstraction";
 import { ShBundler, GasPriceRequest, GasPriceResult } from "./types";
-import { smartAccount, publicClient } from "./user";
 
 function createShBundler(client: BundlerClient): ShBundler {
   return {
@@ -43,7 +43,9 @@ function createShBundler(client: BundlerClient): ShBundler {
 
 function initShBundler(
   smartAccount: SmartAccount,
-  publicClient: Client
+  publicClient: Client,
+  paymasterClient: PaymasterClient,
+  mode: 'sponsor' | 'user'
 ): ShBundler {
   return createShBundler(
     createBundlerClient({
@@ -52,10 +54,15 @@ function initShBundler(
       account: smartAccount,
       client: publicClient,
       chain: CHAIN,
+      paymaster: paymasterClient,
+      paymasterContext: {
+        mode: mode,
+        address: smartAccount.address,
+      },
     })
   );
 }
 
-const shBundler = initShBundler(smartAccount, publicClient);
 
-export { shBundler };
+
+export { initShBundler };
