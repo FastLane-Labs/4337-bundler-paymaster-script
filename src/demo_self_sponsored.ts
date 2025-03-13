@@ -1,10 +1,7 @@
 import { smartAccount, publicClient, userClient, paymasterClient } from "./user";
 import { initShBundler } from "./bundler";
 import { initContract, paymasterMode } from "./contracts";
-import {
-  depositAndBondSmartAccountToShmonad,
-  depositToEntrypoint,
-} from "./deposit";
+import { depositAndBondEOAToShmonad, depositToEntrypoint } from "./deposit";
 import { ADDRESS_HUB } from "./constants";
 import addressHubAbi from "./abi/addresshub.json";
 import paymasterAbi from "./abi/paymaster.json";
@@ -40,8 +37,8 @@ const shMonadContract = await initContract(
 
 // paymaster policy
 const policyId = (await paymasterContract.read.POLICY_ID([])) as bigint;
-const transferAmount = 3400000000000000000n;
-const bondAmount = 3000000000000000000n;
+
+const bondAmount = 2000000000000000000n;
 
 // smart account
 const smartAccountBalance = await publicClient.getBalance({
@@ -61,20 +58,6 @@ const smartAccountBondedAmount = (await shMonadContract.read.balanceOfBonded([
 ])) as bigint;
 console.log("Smart Account shmonad bonded", smartAccountBondedAmount);
 
-if (smartAccountBalance < transferAmount) {
-  const amountToTransfer = transferAmount - smartAccountBalance;
-  console.log("Transferring", amountToTransfer, "to smart account");
-
-  const hash = await userClient.sendTransaction({
-    to: smartAccount.address,
-    value: amountToTransfer,
-    gas: 28000n,
-  });
-
-  console.log("Hash:", hash);
-  await publicClient.waitForTransactionReceipt({ hash });
-}
-
 if (smartAccountBondedAmount < bondAmount) {
   const amountToDeposit = bondAmount - smartAccountBondedAmount;
 
@@ -84,8 +67,7 @@ if (smartAccountBondedAmount < bondAmount) {
 
   console.log("Depositing and bonding smart account to shmonad", shMONToBond);
 
-  await depositAndBondSmartAccountToShmonad(
-    shBundler,
+  await depositAndBondEOAToShmonad(
     policyId,
     smartAccount.address,
     shMONToBond,
