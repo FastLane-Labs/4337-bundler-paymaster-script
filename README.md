@@ -52,6 +52,12 @@ install dependencies
 npm install
 ```
 
+### Run the paymaster
+In a separate server:
+```bash
+npm run dev
+```
+
 ### Self Sponsored
 ```bash
 npm run demo:self-sponsored
