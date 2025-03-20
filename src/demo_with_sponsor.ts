@@ -84,11 +84,11 @@ const userOp = await smartAccountClient.prepareUserOperation({
   calls,
 });
 
-//get this from a backend service
+// BACKEND SERVICE: START
 const currentTime = BigInt(Math.floor(Date.now() / 1000));
 const validUntil = currentTime + BigInt(3600);
 const validAfter = BigInt(0);
-const sponsorSignature = await getHash(
+const hash = await getHash(
   toPackedUserOperation(userOp),
   validUntil,
   validAfter,
@@ -96,11 +96,18 @@ const sponsorSignature = await getHash(
   BigInt(CHAIN_ID)
 )
 
-console.log("sponsorSignature", sponsorSignature);
+// Sign hash with sponsor wallet
+const sponsorSignature = await userClient.signMessage({
+  account: userClient.account,
+  message: { raw: hash },
+});
+// BACKEND SERVICE: END
 
 const userOpHash = await shBundler.sendUserOperation({
   account: smartAccount,
   calls,
+  // MUST HAVE SAME NONCE AS PREPARED USER OPERATION
+  nonce: userOp.nonce,
   paymasterContext: {
     mode: "sponsor",
     paymaster: PAYMASTER,

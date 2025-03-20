@@ -1,21 +1,7 @@
 import express from 'express';
 import { Request, Response } from 'express';
-import { http, type Hex, type Address, createPublicClient } from 'viem';
-import { ADDRESS_HUB } from './constants';
-import paymasterAbi from './abi/paymaster.json';
-import addressHubAbi from './abi/addresshub.json';
-import shmonadAbi from './abi/shmonad.json';
-import { monadTestnet } from 'viem/chains';
+import { type Hex, type Address } from 'viem';
 import corsMiddleware from 'cors';
-// Use a backend-specific RPC URL (not prefixed with NEXT_PUBLIC_)
-const BACKEND_RPC_URL = process.env.RPC_URL;
-const MIN_BONDED_BALANCE = 100000000000000000n;
-
-// Initialize backend client
-const backendPublicClient = createPublicClient({
-  chain: monadTestnet,
-  transport: http(BACKEND_RPC_URL)
-});
 
 
 type PaymasterContext = {
@@ -23,8 +9,8 @@ type PaymasterContext = {
   paymaster: Address;
   sponsor: Address;
   sponsorSignature: Hex;
-  validUntil: bigint;
-  validAfter: bigint;
+  validUntil: string;
+  validAfter: string;
 }
 
 // Add Express app setup at the top level:
@@ -55,12 +41,6 @@ async function validateRequest(req: Request) {
   // Validate required parameters
   if (!userOperation?.sender || !entryPointAddress || !chainId || !context) {
     throw new Error('Required parameters: userOperation, entryPointAddress, chainId, context');
-  }
-
-  // Validate bonded balance
-  const bondedBalance = await getBondedBalance(context.sponsor, context.paymaster);
-  if (bondedBalance < MIN_BONDED_BALANCE) {
-    throw new Error('Insufficient bonded balance. Visit shmonad.xyz to bond more MON.');
   }
 
   return { id, method, userOperation, entryPointAddress, chainId, context };
@@ -147,7 +127,7 @@ async function handlePaymasterRequest(req: Request, res: Response) {
             paymaster: context.paymaster,
             paymasterData: paymasterMode(context),
             paymasterVerificationGasLimit: '75000',
-            paymasterPostOpGasLimit: '120000',
+            paymasterPostOpGasLimit: '125000',
             sponsor: {
               name: 'Fastlane Paymaster'
             },
@@ -187,37 +167,20 @@ function paymasterMode(
       if (paymasterContext.sponsorSignature === undefined) {
         throw new Error("sponsorSignature is undefined");
       }
-  
-      return `0x01${paymasterContext.sponsor.slice(2)}${paymasterContext.validUntil
+      console.log("paymasterContext", paymasterContext);
+
+      const validUntil = BigInt(paymasterContext.validUntil);
+      const validAfter = BigInt(paymasterContext.validAfter);
+
+      const signature = `0x01${paymasterContext.sponsor.slice(2)}${validUntil
         .toString(16)
-        .padStart(12, "0")}${paymasterContext.validAfter
+        .padStart(12, "0")}${validAfter
         .toString(16)
         .padStart(12, "0")}${paymasterContext.sponsorSignature.slice(2)}`;
+  
+      return signature;
     }
   }
-
-async function getBondedBalance(smartAccountAddress: Address, paymasterAddress: Address): Promise<bigint> {
-    const policyId = (await backendPublicClient.readContract({
-        address: paymasterAddress,
-        abi: paymasterAbi,
-        functionName: 'POLICY_ID',
-        args: []
-      })) as bigint;
-
-    const shMonadAddress = await backendPublicClient.readContract({
-        address: ADDRESS_HUB,
-        abi: addressHubAbi,
-        functionName: 'shMonad',
-        args: []
-    }) as Address;
-    
-    return await backendPublicClient.readContract({
-        address: shMonadAddress,
-        abi: shmonadAbi,
-        functionName: 'balanceOfBonded',
-        args: [policyId, smartAccountAddress]
-    }) as bigint;
-}
 
 // Add route handler and server startup:
 app.post('/', handlePaymasterRequest as any);
