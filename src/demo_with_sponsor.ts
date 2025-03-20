@@ -1,14 +1,13 @@
-import { smartAccount, publicClient, userClient, paymasterClient } from "./user";
+import { smartAccount, publicClient, userClient, smartAccountClient, shBundler } from "./user";
 import { initContract } from "./contracts";
 import { depositAndBondEOAToShmonad } from "./deposit";
-import { ADDRESS_HUB } from "./constants";
+import { ADDRESS_HUB, CHAIN_ID } from "./constants";
 import addressHubAbi from "./abi/addresshub.json";
 import paymasterAbi from "./abi/paymaster.json";
 import shmonadAbi from "./abi/shmonad.json";
 import { Hex } from "viem";
-import { initShBundler } from "./bundler";
-
-const shBundler = initShBundler(smartAccount, publicClient, paymasterClient, "sponsor");
+import { toPackedUserOperation } from "viem/account-abstraction";
+import { getHash } from "./paymasterBackend";
 
 // initialize contracts and get addresses
 const addressHubContract = await initContract(
@@ -73,18 +72,44 @@ if (sponsorBondedAmount < depositAmount) {
 const paymasterDeposit = await paymasterContract.read.getDeposit([]);
 console.log("paymaster entrypoint deposit", paymasterDeposit);
 
-const userOpHash = await shBundler.sendUserOperation({
+const calls = [
+  {
+    to: userClient.account.address,
+    value: 1000000000000000n,
+  },
+];
+
+const userOp = await smartAccountClient.prepareUserOperation({
   account: smartAccount,
-  calls: [
-    {
-      to: userClient.account.address,
-      value: 1000000000000000n,
-    },
-  ],
-  ...(await shBundler.getUserOperationGasPrice()).slow,
+  calls,
 });
 
-console.log("User Operation Hash:", userOpHash);
+//get this from a backend service
+const currentTime = BigInt(Math.floor(Date.now() / 1000));
+const validUntil = currentTime + BigInt(3600);
+const validAfter = BigInt(0);
+const sponsorSignature = await getHash(
+  toPackedUserOperation(userOp),
+  validUntil,
+  validAfter,
+  PAYMASTER,
+  BigInt(CHAIN_ID)
+)
+
+console.log("sponsorSignature", sponsorSignature);
+
+const userOpHash = await shBundler.sendUserOperation({
+  account: smartAccount,
+  calls,
+  paymasterContext: {
+    mode: "sponsor",
+    paymaster: PAYMASTER,
+    sponsor: userClient.account.address,
+    sponsorSignature: sponsorSignature,
+    validUntil,
+    validAfter
+  }
+});
 
 const userOpReceipt = await shBundler.waitForUserOperationReceipt({
   hash: userOpHash,
