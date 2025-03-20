@@ -1,4 +1,5 @@
-import { createPublicClient, createWalletClient, http } from "viem";
+import { createPublicClient, createWalletClient, hexToBigInt, http } from "viem";
+import { RpcSchema } from "viem";
 import {
   CHAIN,
   RPC_URL,
@@ -10,10 +11,13 @@ import {
   MULTI_SEND_ADDRESS,
   MULTI_SEND_CALL_ONLY_ADDRESS,
   PAYMASTER_URL,
+  SHBUNDLER_URL,
 } from "./constants";
 import { toSafeSmartAccount } from "permissionless/accounts";
-import { entryPoint07Address } from "viem/account-abstraction";
+import { createBundlerClient, entryPoint07Address } from "viem/account-abstraction";
 import { createPaymasterClient } from "viem/account-abstraction";
+import { createSmartAccountClient } from "permissionless";
+import { GasPriceResult, GasPriceRequest } from "./types";
 // user client
 const userClient = createWalletClient({
   chain: CHAIN,
@@ -49,4 +53,32 @@ const smartAccount = await toSafeSmartAccount({
   multiSendCallOnlyAddress: MULTI_SEND_CALL_ONLY_ADDRESS,
 });
 
-export { userClient, publicClient, smartAccount, paymasterClient };
+const smartAccountClient = createSmartAccountClient({
+  client: publicClient,
+  bundlerTransport: http(SHBUNDLER_URL),
+  chain: CHAIN,
+});
+
+const shBundler = createBundlerClient({
+  transport: http(SHBUNDLER_URL),
+  name: "shBundler",
+  client: publicClient,
+  chain: CHAIN,
+  paymaster: paymasterClient,
+  userOperation: {
+    async estimateFeesPerGas({ bundlerClient }) {
+      const resultEncoded = await bundlerClient.request<GasPriceRequest>({
+        method: "gas_getUserOperationGasPrice",
+        params: [],
+      });
+
+      // Return only the standard tier fees as required by the FeeValuesEIP1559 type
+      return {
+        maxFeePerGas: hexToBigInt(resultEncoded.standard.maxFeePerGas),
+        maxPriorityFeePerGas: hexToBigInt(resultEncoded.standard.maxPriorityFeePerGas)
+      };
+    }
+  }
+});
+
+export { userClient, publicClient, smartAccount, paymasterClient, smartAccountClient, shBundler };
