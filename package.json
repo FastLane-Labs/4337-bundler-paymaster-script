@@ -9,6 +9,7 @@
   "scripts": {
     "demo:self-sponsored": "tsx ./src/demo_self_sponsored.ts",
     "demo:with-sponsor": "tsx ./src/demo_with_sponsor.ts",
+    "demo:redeem": "tsx ./src/demo_redeem.ts",
     "build": "tsc"
   },
   "type": "module"
