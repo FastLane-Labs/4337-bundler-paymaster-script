@@ -3,12 +3,6 @@ import {
   CHAIN,
   RPC_URL,
   EOA,
-  SAFE4337_MODULE_ADDRESS,
-  SAFE_PROXY_FACTORY_ADDRESS,
-  SAFE_SINGLETON_ADDRESS,
-  SAFE_MODULE_SETUP_ADDRESS,
-  MULTI_SEND_ADDRESS,
-  MULTI_SEND_CALL_ONLY_ADDRESS,
   PAYMASTER_URL,
   SHBUNDLER_URL,
 } from "./constants";
@@ -43,13 +37,7 @@ const smartAccount = await toSafeSmartAccount({
     version: "0.7",
   },
   owners: [EOA],
-  version: "1.4.1",
-  safe4337ModuleAddress: SAFE4337_MODULE_ADDRESS,
-  safeProxyFactoryAddress: SAFE_PROXY_FACTORY_ADDRESS,
-  safeSingletonAddress: SAFE_SINGLETON_ADDRESS,
-  safeModuleSetupAddress: SAFE_MODULE_SETUP_ADDRESS,
-  multiSendAddress: MULTI_SEND_ADDRESS,
-  multiSendCallOnlyAddress: MULTI_SEND_CALL_ONLY_ADDRESS,
+  version: "1.4.1"
 });
 
 // Extract the shared gas estimation function

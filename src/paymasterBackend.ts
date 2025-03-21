@@ -32,7 +32,6 @@ export async function fetchSignature(
 
   return sponsorSignature;
 }
-
   
   /**
    * Gets the hash of the user operation.
