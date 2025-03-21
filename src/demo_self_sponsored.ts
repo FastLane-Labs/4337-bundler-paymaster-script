@@ -78,7 +78,7 @@ const paymasterDeposit = await paymasterContract.read.getDeposit([]);
 console.log("paymaster entrypoint deposit", paymasterDeposit);
 
 // send user operation with shBundler
-const userOpHash = await shBundler.sendUserOperation({
+const userOpHash = await shBundler.prepareUserOperation({
   account: smartAccount,
   calls: [
     {
@@ -95,9 +95,9 @@ const userOpHash = await shBundler.sendUserOperation({
 
 console.log("User Operation Hash:", userOpHash);
 
-const userOpReceipt = await shBundler.waitForUserOperationReceipt({
-  hash: userOpHash,
-});
-console.log("User Operation Receipt:", userOpReceipt);
+// const userOpReceipt = await shBundler.waitForUserOperationReceipt({
+//   hash: userOpHash,
+// });
+// console.log("User Operation Receipt:", userOpReceipt);
 
-process.exit(0);
+// process.exit(0);

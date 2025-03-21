@@ -108,6 +108,11 @@ const userOpHash = await shBundler.sendUserOperation({
   calls,
   // MUST HAVE SAME NONCE AS PREPARED USER OPERATION
   nonce: userOp.nonce,
+  callGasLimit: userOp.callGasLimit,
+  verificationGasLimit: userOp.verificationGasLimit,
+  preVerificationGas: userOp.preVerificationGas,
+  maxFeePerGas: userOp.maxFeePerGas,
+  maxPriorityFeePerGas: userOp.maxPriorityFeePerGas,
   paymasterContext: {
     mode: "sponsor",
     paymaster: PAYMASTER,
