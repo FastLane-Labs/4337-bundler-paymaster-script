@@ -6,6 +6,33 @@ import {
     parseAbiParameters
   } from 'viem';
   import { PackedUserOperation } from 'viem/account-abstraction';
+import { userClient } from './user';
+
+export async function fetchSignature(
+  userOp: PackedUserOperation, 
+  validUntil: bigint, 
+  validAfter: bigint, 
+  paymasterAddress: Address, 
+  chainId: bigint
+): Promise<Hex> {
+  const hash = await getHash(
+    userOp,
+    validUntil,
+    validAfter,
+    paymasterAddress,
+    chainId
+  )
+
+
+  // Sign hash with sponsor wallet
+  const sponsorSignature = await userClient.signMessage({
+    account: userClient.account,
+    message: { raw: hash },
+  });
+
+  return sponsorSignature;
+}
+
   
   /**
    * Gets the hash of the user operation.
@@ -16,7 +43,7 @@ import {
    * @param chainId The chain ID
    * @returns The hash of the user operation
    */
-  export function getHash(
+  function getHash(
     userOp: PackedUserOperation,
     validUntil: bigint,
     validAfter: bigint,

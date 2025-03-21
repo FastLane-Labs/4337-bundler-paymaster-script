@@ -1,5 +1,4 @@
 import { createPublicClient, createWalletClient, hexToBigInt, http } from "viem";
-import { RpcSchema } from "viem";
 import {
   CHAIN,
   RPC_URL,
@@ -14,10 +13,10 @@ import {
   SHBUNDLER_URL,
 } from "./constants";
 import { toSafeSmartAccount } from "permissionless/accounts";
-import { createBundlerClient, entryPoint07Address } from "viem/account-abstraction";
+import { BundlerClient, createBundlerClient, entryPoint07Address } from "viem/account-abstraction";
 import { createPaymasterClient } from "viem/account-abstraction";
 import { createSmartAccountClient } from "permissionless";
-import { GasPriceResult, GasPriceRequest } from "./types";
+import { GasPriceRequest, GasPrices } from "./types";
 // user client
 const userClient = createWalletClient({
   chain: CHAIN,
@@ -53,10 +52,27 @@ const smartAccount = await toSafeSmartAccount({
   multiSendCallOnlyAddress: MULTI_SEND_CALL_ONLY_ADDRESS,
 });
 
+// Extract the shared gas estimation function
+const estimateFeesPerGas = async ({ bundlerClient }: { bundlerClient: BundlerClient }): Promise<GasPrices> => {
+  const resultEncoded = await bundlerClient.request<GasPriceRequest>({
+    method: "gas_getUserOperationGasPrice",
+    params: [],
+  });
+
+  // Returning standard, but could choose any tier
+  return {
+    maxFeePerGas: hexToBigInt(resultEncoded.standard.maxFeePerGas),
+    maxPriorityFeePerGas: hexToBigInt(resultEncoded.standard.maxPriorityFeePerGas)
+  };
+};
+
 const smartAccountClient = createSmartAccountClient({
   client: publicClient,
   bundlerTransport: http(SHBUNDLER_URL),
   chain: CHAIN,
+  userOperation: {
+    estimateFeesPerGas
+  }
 });
 
 const shBundler = createBundlerClient({
@@ -66,19 +82,15 @@ const shBundler = createBundlerClient({
   chain: CHAIN,
   paymaster: paymasterClient,
   userOperation: {
-    async estimateFeesPerGas({ bundlerClient }) {
-      const resultEncoded = await bundlerClient.request<GasPriceRequest>({
-        method: "gas_getUserOperationGasPrice",
-        params: [],
-      });
-
-      // Return only the standard tier fees as required by the FeeValuesEIP1559 type
-      return {
-        maxFeePerGas: hexToBigInt(resultEncoded.standard.maxFeePerGas),
-        maxPriorityFeePerGas: hexToBigInt(resultEncoded.standard.maxPriorityFeePerGas)
-      };
-    }
+    estimateFeesPerGas
   }
 });
 
-export { userClient, publicClient, smartAccount, paymasterClient, smartAccountClient, shBundler };
+export { 
+  userClient, 
+  publicClient, 
+  smartAccount, 
+  paymasterClient, 
+  smartAccountClient, 
+  shBundler 
+};

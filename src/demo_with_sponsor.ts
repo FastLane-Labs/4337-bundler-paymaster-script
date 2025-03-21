@@ -7,7 +7,7 @@ import paymasterAbi from "./abi/paymaster.json";
 import shmonadAbi from "./abi/shmonad.json";
 import { Hex } from "viem";
 import { toPackedUserOperation } from "viem/account-abstraction";
-import { getHash } from "./paymasterBackend";
+import { fetchSignature } from "./paymasterBackend";
 
 // initialize contracts and get addresses
 const addressHubContract = await initContract(
@@ -88,19 +88,13 @@ const userOp = await smartAccountClient.prepareUserOperation({
 const currentTime = BigInt(Math.floor(Date.now() / 1000));
 const validUntil = currentTime + BigInt(3600);
 const validAfter = BigInt(0);
-const hash = await getHash(
-  toPackedUserOperation(userOp),
-  validUntil,
-  validAfter,
-  PAYMASTER,
+const sponsorSignature = await fetchSignature(
+  toPackedUserOperation(userOp), 
+  validUntil, 
+  validAfter, 
+  PAYMASTER, 
   BigInt(CHAIN_ID)
-)
-
-// Sign hash with sponsor wallet
-const sponsorSignature = await userClient.signMessage({
-  account: userClient.account,
-  message: { raw: hash },
-});
+);
 // BACKEND SERVICE: END
 
 const userOpHash = await shBundler.sendUserOperation({
