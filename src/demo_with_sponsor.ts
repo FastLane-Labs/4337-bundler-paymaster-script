@@ -1,38 +1,44 @@
 import { smartAccount, publicClient, userClient, smartAccountClient, shBundler } from "./user";
-import { initContract } from "./contracts";
 import { depositAndBondEOAToShmonad } from "./deposit";
 import { ADDRESS_HUB, CHAIN_ID } from "./constants";
 import addressHubAbi from "./abi/addresshub.json";
 import paymasterAbi from "./abi/paymaster.json";
 import shmonadAbi from "./abi/shmonad.json";
 import { Hex } from "viem";
+import { getContract } from "viem";
 import { toPackedUserOperation } from "viem/account-abstraction";
 import { fetchSignature } from "./paymasterBackend";
 
 // initialize contracts and get addresses
-const addressHubContract = await initContract(
-  ADDRESS_HUB,
-  addressHubAbi,
-  publicClient,
-  userClient
-);
+const addressHubContract = await getContract({
+  address: ADDRESS_HUB,
+  abi: addressHubAbi,
+  client: {
+    public: publicClient,
+    account: userClient,
+  },
+});
 
 const PAYMASTER = (await addressHubContract.read.paymaster4337([])) as Hex;
 const SHMONAD = (await addressHubContract.read.shMonad([])) as Hex;
 
-const paymasterContract = await initContract(
-  PAYMASTER,
-  paymasterAbi,
-  publicClient,
-  userClient
-);
+const paymasterContract = await getContract({
+  address: PAYMASTER,
+  abi: paymasterAbi,
+  client: {
+    public: publicClient,
+    account: userClient,
+  },
+});
 
-const shMonadContract = await initContract(
-  SHMONAD,
-  shmonadAbi,
-  publicClient,
-  userClient
-);
+const shMonadContract = await getContract({
+  address: SHMONAD,
+  abi: shmonadAbi,
+  client: {
+    public: publicClient,
+    account: userClient,
+  },
+});
 
 // paymaster policy
 const policyId = (await paymasterContract.read.POLICY_ID([])) as bigint;
