@@ -109,7 +109,6 @@ const userOpHash = await shBundler.sendUserOperation({
   maxPriorityFeePerGas: userOp.maxPriorityFeePerGas,
   paymasterContext: {
     mode: "sponsor",
-    paymaster: PAYMASTER,
     sponsor: userClient.account.address,
     sponsorSignature: sponsorSignature,
     validUntil,

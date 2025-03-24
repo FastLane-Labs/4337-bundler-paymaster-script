@@ -88,7 +88,6 @@ const userOpHash = await shBundler.sendUserOperation({
   ],
   paymasterContext: {
     mode: "user",
-    paymaster: PAYMASTER,
     sponsor: smartAccount.address,
   },
 });

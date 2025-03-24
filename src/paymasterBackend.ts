@@ -8,6 +8,14 @@ import {
   import { PackedUserOperation } from 'viem/account-abstraction';
 import { userClient } from './user';
 
+/**
+ * Fetches a signature from the sponsor wallet for a user operation.
+ * @param userOp The user operation to sign
+ * @param validUntil The end timestamp of the user operation
+ * @param validAfter The start timestamp of the user operation
+ * @param paymasterAddress The address of the paymaster contract
+ * @param chainId The chain ID
+ */
 export async function fetchSignature(
   userOp: PackedUserOperation, 
   validUntil: bigint, 
