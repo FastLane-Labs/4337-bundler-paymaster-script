@@ -1,14 +1,11 @@
-import { smartAccount, publicClient, userClient, paymasterClient } from "./user";
-import { initShBundler } from "./bundler";
-import { initContract, paymasterMode } from "./contracts";
-import { depositAndBondEOAToShmonad, depositToEntrypoint } from "./deposit";
+import { smartAccount, publicClient, userClient, shBundler } from "./user";
+import { initContract } from "./contracts";
+import { depositAndBondEOAToShmonad } from "./deposit";
 import { ADDRESS_HUB } from "./constants";
 import addressHubAbi from "./abi/addresshub.json";
 import paymasterAbi from "./abi/paymaster.json";
 import shmonadAbi from "./abi/shmonad.json";
 import { Hex } from "viem";
-
-const shBundler = initShBundler(smartAccount, publicClient, paymasterClient, "user");
 
 // initialize contracts and get addresses
 const addressHubContract = await initContract(
@@ -89,7 +86,10 @@ const userOpHash = await shBundler.sendUserOperation({
       value: 1000000000000000n,
     },
   ],
-  ...(await shBundler.getUserOperationGasPrice()).slow,
+  paymasterContext: {
+    mode: "user",
+    sponsor: smartAccount.address,
+  },
 });
 
 console.log("User Operation Hash:", userOpHash);
