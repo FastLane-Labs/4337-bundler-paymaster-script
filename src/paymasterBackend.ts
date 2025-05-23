@@ -5,8 +5,15 @@ import {
     encodeAbiParameters,
     parseAbiParameters
   } from 'viem';
-  import { PackedUserOperation } from 'viem/account-abstraction';
-import { userClient } from './user';
+import { PackedUserOperation } from 'viem/account-abstraction';
+import { CHAIN, SPONSOR, RPC_URL } from './constants';
+import { createWalletClient, http } from 'viem';
+
+const sponsorClient = createWalletClient({
+  chain: CHAIN,
+  transport: http(RPC_URL),
+  account: SPONSOR,
+});
 
 /**
  * Fetches a signature from the sponsor wallet for a user operation.
@@ -33,8 +40,8 @@ export async function fetchSignature(
 
 
   // Sign hash with sponsor wallet
-  const sponsorSignature = await userClient.signMessage({
-    account: userClient.account,
+  const sponsorSignature = await sponsorClient.signMessage({
+    account: sponsorClient.account,
     message: { raw: hash },
   });
 

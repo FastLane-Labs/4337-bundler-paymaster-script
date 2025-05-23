@@ -83,10 +83,7 @@ const calls = [
 
 const userOpHash = await shBundler.sendUserOperation({
   account: smartAccount,
-  calls,
-  preVerificationGas: 100000000000n,
-  verificationGasLimit: 100000000000n,
-  callGasLimit: 100000000000n,
+  calls
 });
 
 const userOpReceipt = await shBundler.waitForUserOperationReceipt({

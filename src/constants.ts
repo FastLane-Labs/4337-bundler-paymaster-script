@@ -8,12 +8,14 @@ const RPC_URL = process.env.RPC_URL as string;
 const SHBUNDLER_URL = process.env.SHBUNDLER_URL as string;
 const PAYMASTER_URL = process.env.PAYMASTER_URL as string;
 const PRIVATE_KEY = process.env.PRIVATE_KEY as Hex;
+const SPONSOR_PRIVATE_KEY = process.env.SPONSOR_PRIVATE_KEY as Hex;
 const ADDRESS_HUB = process.env.ADDRESS_HUB as Hex;
 const PAYMASTER = process.env.PAYMASTER as Hex;
 
 const CHAIN_ID = 10143;
 
 const EOA = privateKeyToAccount(PRIVATE_KEY);
+const SPONSOR = privateKeyToAccount(SPONSOR_PRIVATE_KEY);
 
 const CHAIN: Chain = {
   id: Number(CHAIN_ID),
@@ -32,10 +34,12 @@ const CHAIN: Chain = {
 export {
   CHAIN_ID,
   EOA,
+  SPONSOR,
   CHAIN,
   RPC_URL,
   SHBUNDLER_URL,
   PRIVATE_KEY,
+  SPONSOR_PRIVATE_KEY,
   ADDRESS_HUB,
   PAYMASTER_URL,
   PAYMASTER,

@@ -4,8 +4,7 @@ import { type Hex, type Address } from 'viem';
 import corsMiddleware from 'cors';
 import { toPackedUserOperation } from "viem/account-abstraction";
 import { fetchSignature } from './paymasterBackend';
-import { PAYMASTER, CHAIN_ID } from './constants';
-
+import { CHAIN_ID, PAYMASTER } from './constants';
 
 type PaymasterContext = {
   mode: "sponsor" | "user";
@@ -113,7 +112,7 @@ async function handlePaymasterRequest(req: Request, res: Response) {
           jsonrpc: '2.0',
           id,
           result: {
-            paymaster: context.paymaster,
+            paymaster: PAYMASTER,
             paymasterData: await paymasterMode(userOperation, context),
             sponsor: {
               name: 'Fastlane Paymaster'
@@ -127,7 +126,7 @@ async function handlePaymasterRequest(req: Request, res: Response) {
           jsonrpc: '2.0',
           id,
           result: {
-            paymaster: context.paymaster,
+            paymaster: PAYMASTER,
             paymasterData: await paymasterMode(userOperation, context),
             paymasterVerificationGasLimit: '75000',
             paymasterPostOpGasLimit: '125000',
@@ -185,7 +184,6 @@ async function paymasterMode(
         .padStart(12, "0")}${validAfter
         .toString(16)
         .padStart(12, "0")}${signature.slice(2)}`;
-      console.log("paymasterData", paymasterData);
   
       return paymasterData;
     }
