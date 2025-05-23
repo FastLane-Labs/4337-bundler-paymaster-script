@@ -55,22 +55,30 @@ const estimateFeesPerGas = async ({ bundlerClient }: { bundlerClient: BundlerCli
 };
 
 const smartAccountClient = createSmartAccountClient({
+  account: smartAccount,
   client: publicClient,
   bundlerTransport: http(SHBUNDLER_URL),
+  paymaster: paymasterClient,
   chain: CHAIN,
-  userOperation: {
-    estimateFeesPerGas
+  paymasterContext: {
+    mode: "sponsor",
+    sponsor: userClient.account.address,
+    validUntil: BigInt(Math.floor(Date.now() / 1000) + 3600),
+    validAfter: BigInt(Math.floor(Date.now() / 1000))
   }
 });
 
 const shBundler = createBundlerClient({
+  account: smartAccount,
+  paymaster: paymasterClient,
   transport: http(SHBUNDLER_URL),
-  name: "shBundler",
   client: publicClient,
   chain: CHAIN,
-  paymaster: paymasterClient,
-  userOperation: {
-    estimateFeesPerGas
+  paymasterContext: {
+    mode: "sponsor",
+    sponsor: userClient.account.address,
+    validUntil: BigInt(Math.floor(Date.now() / 1000) + 3600),
+    validAfter: BigInt(Math.floor(Date.now() / 1000))
   }
 });
 
@@ -79,6 +87,6 @@ export {
   publicClient, 
   smartAccount, 
   paymasterClient, 
-  smartAccountClient, 
-  shBundler 
+  smartAccountClient,  
+  shBundler
 };

@@ -2,6 +2,9 @@ import express from 'express';
 import { Request, Response } from 'express';
 import { type Hex, type Address } from 'viem';
 import corsMiddleware from 'cors';
+import { toPackedUserOperation } from "viem/account-abstraction";
+import { fetchSignature } from './paymasterBackend';
+import { PAYMASTER, CHAIN_ID } from './constants';
 
 
 type PaymasterContext = {
@@ -101,7 +104,7 @@ async function handlePaymasterRequest(req: Request, res: Response) {
   }
 
   try {
-    const { id, method, context } = await validateRequest(req);
+    const { id, userOperation, method, context } = await validateRequest(req);
 
     // Handle different RPC methods
     switch (method) {
@@ -111,7 +114,7 @@ async function handlePaymasterRequest(req: Request, res: Response) {
           id,
           result: {
             paymaster: context.paymaster,
-            paymasterData: paymasterMode(context),
+            paymasterData: await paymasterMode(userOperation, context),
             sponsor: {
               name: 'Fastlane Paymaster'
             },
@@ -125,7 +128,7 @@ async function handlePaymasterRequest(req: Request, res: Response) {
           id,
           result: {
             paymaster: context.paymaster,
-            paymasterData: paymasterMode(context),
+            paymasterData: await paymasterMode(userOperation, context),
             paymasterVerificationGasLimit: '75000',
             paymasterPostOpGasLimit: '125000',
             sponsor: {
@@ -149,7 +152,8 @@ async function handlePaymasterRequest(req: Request, res: Response) {
   }
 }
 
-function paymasterMode(
+async function paymasterMode(
+    userOperation: any,
     paymasterContext: PaymasterContext
   ) {
     if (paymasterContext.mode === "user") {
@@ -164,21 +168,26 @@ function paymasterMode(
       if (paymasterContext.validAfter === undefined) {
         throw new Error("validAfter is undefined");
       }
-      if (paymasterContext.sponsorSignature === undefined) {
-        throw new Error("sponsorSignature is undefined");
-      }
-      console.log("paymasterContext", paymasterContext);
 
       const validUntil = BigInt(paymasterContext.validUntil);
       const validAfter = BigInt(paymasterContext.validAfter);
 
-      const signature = `0x01${paymasterContext.sponsor.slice(2)}${validUntil
+      const signature = await fetchSignature(
+        toPackedUserOperation(userOperation), 
+        validUntil, 
+        validAfter, 
+        PAYMASTER, 
+        BigInt(CHAIN_ID)
+      );
+
+      const paymasterData = `0x01${paymasterContext.sponsor.slice(2)}${validUntil
         .toString(16)
         .padStart(12, "0")}${validAfter
         .toString(16)
-        .padStart(12, "0")}${paymasterContext.sponsorSignature.slice(2)}`;
+        .padStart(12, "0")}${signature.slice(2)}`;
+      console.log("paymasterData", paymasterData);
   
-      return signature;
+      return paymasterData;
     }
   }
 

@@ -9,6 +9,7 @@ const SHBUNDLER_URL = process.env.SHBUNDLER_URL as string;
 const PAYMASTER_URL = process.env.PAYMASTER_URL as string;
 const PRIVATE_KEY = process.env.PRIVATE_KEY as Hex;
 const ADDRESS_HUB = process.env.ADDRESS_HUB as Hex;
+const PAYMASTER = process.env.PAYMASTER as Hex;
 
 const CHAIN_ID = 10143;
 
@@ -37,4 +38,5 @@ export {
   PRIVATE_KEY,
   ADDRESS_HUB,
   PAYMASTER_URL,
+  PAYMASTER,
 };

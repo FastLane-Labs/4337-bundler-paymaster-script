@@ -1,4 +1,4 @@
-import { smartAccount, publicClient, userClient, smartAccountClient, shBundler } from "./user";
+import { smartAccount, publicClient, userClient, smartAccountClient, paymasterClient, shBundler } from "./user";
 import { depositAndBondEOAToShmonad } from "./deposit";
 import { ADDRESS_HUB, CHAIN_ID } from "./constants";
 import addressHubAbi from "./abi/addresshub.json";
@@ -74,10 +74,6 @@ if (sponsorBondedAmount < depositAmount) {
   );
 }
 
-// paymaster
-const paymasterDeposit = await paymasterContract.read.getDeposit([]);
-console.log("paymaster entrypoint deposit", paymasterDeposit);
-
 const calls = [
   {
     to: userClient.account.address,
@@ -85,41 +81,12 @@ const calls = [
   },
 ];
 
-const userOp = await smartAccountClient.prepareUserOperation({
-  account: smartAccount,
-  calls,
-});
-
-// BACKEND SERVICE: START
-const currentTime = BigInt(Math.floor(Date.now() / 1000));
-const validUntil = currentTime + BigInt(3600);
-const validAfter = BigInt(0);
-const sponsorSignature = await fetchSignature(
-  toPackedUserOperation(userOp), 
-  validUntil, 
-  validAfter, 
-  PAYMASTER, 
-  BigInt(CHAIN_ID)
-);
-// BACKEND SERVICE: END
-
 const userOpHash = await shBundler.sendUserOperation({
   account: smartAccount,
   calls,
-  // MUST HAVE SAME NONCE AS PREPARED USER OPERATION
-  nonce: userOp.nonce,
-  callGasLimit: userOp.callGasLimit,
-  verificationGasLimit: userOp.verificationGasLimit,
-  preVerificationGas: userOp.preVerificationGas,
-  maxFeePerGas: userOp.maxFeePerGas,
-  maxPriorityFeePerGas: userOp.maxPriorityFeePerGas,
-  paymasterContext: {
-    mode: "sponsor",
-    sponsor: userClient.account.address,
-    sponsorSignature: sponsorSignature,
-    validUntil,
-    validAfter
-  }
+  preVerificationGas: 100000000000n,
+  verificationGasLimit: 100000000000n,
+  callGasLimit: 100000000000n,
 });
 
 const userOpReceipt = await shBundler.waitForUserOperationReceipt({
